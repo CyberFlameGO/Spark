@@ -97,7 +97,7 @@ public class Monitors /*implements Iterable<Monitor>*/ {
     
     public static <M extends Monitor> M loadNoStore(Class<M> clazz, LoadPolicy<M> policy) {
         M monitor = null;
-
+        
         try {
             final Monitor m;
 
@@ -107,8 +107,8 @@ public class Monitors /*implements Iterable<Monitor>*/ {
 
                 m = c.newInstance(policy.values);
             } else {
-                if (clazz.getConstructors().length != 0) {
-                    Constructor c = clazz.getConstructors()[0];
+                if (clazz.getDeclaredConstructors().length != 0) {
+                    Constructor c = clazz.getDeclaredConstructors()[0];
                                 c.setAccessible(true);
 
                     m = (Monitor) c.newInstance();
@@ -125,6 +125,8 @@ public class Monitors /*implements Iterable<Monitor>*/ {
             for (Field f : clazz.getDeclaredFields()) {
                 if (Modifier.isStatic(f.getModifiers())) {
                     if (f.getType() == long.class || f.getType() == Long.class/* || f.getType() == int.class || f.getType() == Integer.class*/) {
+                        f.setAccessible(true);
+
                         if (f.isAnnotationPresent(Monitor.TickInterval.class)) {
                             tickInterval = (Long) f.get(null);
                         }
@@ -133,7 +135,7 @@ public class Monitors /*implements Iterable<Monitor>*/ {
                             tickDelay = (Long) f.get(null);
                         }
                     } else {
-                        Log.debug("Found static field[%s] with type of [%s] for Monitor [%s]", f.getName(), f.getType().getSimpleName(), monitor.getName());
+                        Log.debug("Found static field[%s] with type of [%s] for Monitor [%s]", f.getName(), f.getType().getSimpleName(), m.getName());
                     }
                 }
             }
@@ -175,8 +177,8 @@ public class Monitors /*implements Iterable<Monitor>*/ {
 
                     m = c.newInstance(policy.values);
                 } else {
-                    if (clazz.getConstructors().length != 0) {
-                        Constructor c = clazz.getConstructors()[0];
+                    if (clazz.getDeclaredConstructors().length != 0) {
+                        Constructor c = clazz.getDeclaredConstructors()[0];
                                     c.setAccessible(true);
                                     
                         m = (Monitor) c.newInstance();
@@ -193,6 +195,8 @@ public class Monitors /*implements Iterable<Monitor>*/ {
                 for (Field f : clazz.getDeclaredFields()) {
                     if (Modifier.isStatic(f.getModifiers())) {
                         if (f.getType() == long.class || f.getType() == Long.class/* || f.getType() == int.class || f.getType() == Integer.class*/) {
+                            f.setAccessible(true);
+                            
                             if (f.isAnnotationPresent(Monitor.TickInterval.class)) {
                                 tickInterval = (Long) f.get(null);
                             }
@@ -201,7 +205,7 @@ public class Monitors /*implements Iterable<Monitor>*/ {
                                 tickDelay = (Long) f.get(null);
                             }
                         } else {
-                            Log.debug("Found static field[%s] with type of [%s] for Monitor [%s]", f.getName(), f.getType().getSimpleName(), monitor.getName());
+                            Log.debug("Found static field[%s] with type of [%s] for Monitor [%s]", f.getName(), f.getType().getSimpleName(), m.getName());
                         }
                     }
                 }
