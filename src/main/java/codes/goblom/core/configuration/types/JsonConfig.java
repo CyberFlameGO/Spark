@@ -189,6 +189,7 @@ public class JsonConfig implements Config {
     }
 
     @Override
+    @Deprecated // Will cause problems if not on parent JsonConfig
     public void reload() {
         try {
             String text = readFile(file);
