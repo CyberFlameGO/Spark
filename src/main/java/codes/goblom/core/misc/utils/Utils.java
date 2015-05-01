@@ -5,7 +5,9 @@
  */
 package codes.goblom.core.misc.utils;
 
+import codes.goblom.core.internals.Validater;
 import com.google.common.collect.Lists;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import org.bukkit.Location;
@@ -19,6 +21,11 @@ public class Utils {
     private Utils() { }
     
     public static final Random RANDOM = new Random();
+    private static final List<Validater> NULL_CHECK =  Lists.newLinkedList();
+    
+    static {
+        NULL_CHECK.add((Validater<String>) (String obj) -> obj == null || obj.equals(""));
+    }
     
     public static String getFormattedTime(int time) {
         if (time < 60) {
@@ -62,20 +69,35 @@ public class Utils {
     public static int roundInventorySize(final int size) {
         if (size > 9 && size <= 18) {
             return 18;
-        }
-        if (size > 18 && size <= 27) {
+        } else if (size > 18 && size <= 27) {
             return 27;
-        }
-        if (size > 27 && size <= 36) {
+        } else if (size > 27 && size <= 36) {
             return 36;
-        }
-        if (size > 36 && size <= 45) {
+        } else if (size > 36 && size <= 45) {
             return 45;
-        }
-        if (size > 45) {
+        } else if (size > 45) {
             return 54;
         }
-        
+
         return 9;
+    }
+    
+    public static void addNullCheckValidater(Validater v) {
+        NULL_CHECK.add(v);
+    }
+    
+    public static boolean isNull(Object o) {
+        boolean is = (o == null);
+        Iterator<Validater> it = NULL_CHECK.iterator();
+        
+        while (!is && it.hasNext()) {
+            Validater v = it.next();
+            
+            try {
+                is = v.validate(o);
+            } catch (Exception e) { }
+        }
+        
+        return is;
     }
 }
