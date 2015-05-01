@@ -14,7 +14,6 @@ import codes.goblom.core.internals.task.SyncTask;
 import codes.goblom.core.internals.monitor.Monitors;
 import codes.goblom.core.misc.tools.BukkitDevUpdater;
 import codes.goblom.core.misc.tools.Metrics;
-import codes.goblom.core.misc.tools.Metrics.Plotter;
 import codes.goblom.core.misc.tools.SpigotUpdater;
 import codes.goblom.core.misc.utils.PlayerUtils;
 import codes.goblom.core.reflection.Reflection;
@@ -41,13 +40,13 @@ public abstract class GoPlugin extends JavaPlugin implements GoLib {
     private static GoPlugin instance;
     
     @Getter
-    private final Reflection serverVersion;
+    private final Reflection reflection;
     
     public GoPlugin() {
         super();
         
         GoPlugin.instance = this;
-        this.serverVersion = new Reflection();
+        this.reflection = new Reflection();
     }
     
     public void load() { }
