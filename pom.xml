@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>codes.goblom</groupId>
     <artifactId>GoCore</artifactId>
-    <version>Lib</version>
+    <version>Lib-0.1 Beta</version>
     <packaging>jar</packaging>
     
     <properties>
