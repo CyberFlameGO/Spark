@@ -100,4 +100,19 @@ public class Utils {
         
         return is;
     }
+    
+    public static String addCommas(final Object obj) {
+        final StringBuilder sb = new StringBuilder();
+        final String str = obj.toString();
+        
+        for (int len = str.length(), i = 0; i < len; ++i) {
+            if (len % 3 == i % 3 && i != 0) {
+                sb.append(",");
+            }
+            
+            sb.append(str.charAt(i));
+        }
+        
+        return sb.toString();
+    }
 }
