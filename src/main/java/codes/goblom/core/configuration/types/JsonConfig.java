@@ -9,12 +9,14 @@ import codes.goblom.core.Log;
 import codes.goblom.core.configuration.Config;
 import codes.goblom.core.configuration.ConfigType;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.io.Writer;
 import lombok.Getter;
 import org.bukkit.plugin.Plugin;
 import org.json.JSONArray;
@@ -48,7 +50,11 @@ public class JsonConfig implements Config {
         this.file = new File(external == null ? plugin.getDataFolder() : external, f);
         
         if (!this.file.exists()) {
-            plugin.saveResource(f, false);
+            try {
+                plugin.saveResource(f, false);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         
         if (!this.file.exists()) {
@@ -61,7 +67,12 @@ public class JsonConfig implements Config {
         
         try {
             String text = readFile(file);
-            this.json = new JSONObject(text);
+            
+            if (text == null || text.equals("")) {
+                this.json = new JSONObject();
+            } else {
+                this.json = new JSONObject(text);
+            }
         } catch (IOException | JSONException e) {
             Log.severe("Unable to load JsonConfig %s. Error: %s", f, e.getMessage());
         }
@@ -149,42 +160,42 @@ public class JsonConfig implements Config {
     }
 
     @Override
+    // TODO: Make PrettyJsonWriter work
     public void save() {
-//        PrintWriter pw = null;
+        PrintWriter pw = null;
         try {
-//            pw = new PrintWriter(new FileWriter(this.file));
+            pw = new PrintWriter(new FileWriter(this.file));
             
-//            try (BufferedWriter bw = new BufferedWriter(pw)) {
-//                
-////                if (parent != null) {
-////                    parent.set(tag, json, true);
-////                    
-////                    bw.append(parent.json.toString());
-////                } else {
-////                    bw.append(json.toString());
-////                }
-////                
-////                bw.flush();
-//                
-//            }
-            
+            try (BufferedWriter bw = new BufferedWriter(pw)) {
+                
                 if (parent != null) {
                     parent.set(tag, json, true);
                     
-                    Writer writer = parent.json.write(new PrettyJsonWriter());
-                           writer.flush();
-                           writer.close();
+                    bw.append(parent.json.toString());
                 } else {
-                    Writer writer = json.write(new PrettyJsonWriter());
-                           writer.flush();
-                           writer.close();
+                    bw.append(json.toString());
                 }
+                
+                bw.flush();
+            }
+            
+//                if (parent != null) {
+//                    parent.set(tag, json, true);
+//                    
+//                    Writer writer = parent.json.write(new PrettyJsonWriter());
+//                           writer.flush();
+//                           writer.close();
+//                } else {
+//                    Writer writer = json.write(new PrettyJsonWriter());
+//                           writer.flush();
+//                           writer.close();
+//                }
         } catch (IOException ex) {
             Log.severe("Unable to save JsonConfig %s. Error: %s", file.getName(), ex.getMessage());
         } finally {
-//            if (pw != null) {
-//                pw.close();
-//            }
+            if (pw != null) {
+                pw.close();
+            }
         }
     }
 
@@ -193,7 +204,12 @@ public class JsonConfig implements Config {
     public void reload() {
         try {
             String text = readFile(file);
-            this.json = new JSONObject(text);
+            
+            if (text == null || text.equals("")) {
+                this.json = new JSONObject();
+            } else {
+                this.json = new JSONObject(text);
+            }
         } catch (IOException | JSONException e) {
             Log.severe("Unable to load JsonConfig %s. Error: %s", file.getName(), e.getMessage());
         }

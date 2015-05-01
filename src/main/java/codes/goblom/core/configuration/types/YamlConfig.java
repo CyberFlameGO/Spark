@@ -28,10 +28,18 @@ public class YamlConfig implements Config {
     public YamlConfig(Plugin plugin, File external, String f) {
         f = f.endsWith(".yml") ? f : f + ".yml";
         
+        if (f.equals("config.yml")) {
+            plugin.saveDefaultConfig();
+        }
+        
         this.file = new File(external == null ? plugin.getDataFolder() : external, f);
         
         if (!this.file.exists()) {
-            plugin.saveResource(f, false); //TODO: Support inner-most files. not just top level
+            try {
+                plugin.saveResource(f, false); //TODO: Support inner-most files. not just top level
+            } catch (Exception e) { 
+                e.printStackTrace(); 
+            }
         }
         
         if (!this.file.exists()) {
