@@ -5,6 +5,7 @@
  */
 package codes.goblom.core.internals.task;
 
+import codes.goblom.core.internals.Executor;
 import codes.goblom.core.internals.Callback;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,7 @@ import lombok.RequiredArgsConstructor;
  *
  * @author Goblom
  */
-public abstract class ThreadTask<T> {
+public abstract class ThreadTask<T> implements Executor<T, Throwable> {
     
     private Callback<T> callback = null;
     
@@ -28,9 +29,7 @@ public abstract class ThreadTask<T> {
         this.callback = callback;
         this.thread = new Caller<>(this);
     }
-    
-    public abstract T execute() throws Throwable;
-    
+        
     public void start() {
         thread.start();
     }
