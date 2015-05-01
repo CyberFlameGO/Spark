@@ -11,5 +11,6 @@ package codes.goblom.core.internals;
  */
 public interface Validater<T> {
     
+    //TODO: ??? Maybe have it throw a Throwable
     boolean validate(T obj);
 }
