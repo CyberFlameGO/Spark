@@ -6,6 +6,7 @@
 package codes.goblom.core.internals.tools;
 
 import codes.goblom.core.internals.Executor;
+import codes.goblom.core.misc.utils.PlayerUtils;
 import com.google.common.collect.Maps;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -34,6 +35,14 @@ public class Placeholders {
             @Override
             public Object execute(Player[] args) throws Throwable {
                 return args[0].getLevel();
+            }
+        });
+        
+        register(new AbstractPlaceholder("{player:ping}", false, true) {
+
+            @Override
+            public Object execute(Player[] args) throws Throwable {
+                return PlayerUtils.getPing(args[0]);
             }
         });
     }
