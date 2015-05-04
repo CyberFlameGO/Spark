@@ -9,7 +9,7 @@ package codes.goblom.core.internals;
  *
  * @author Goblom
  */
-public interface ExecutorNoArgs<T, E extends Throwable> extends Executor<T, E> {
+public interface ExecutorNoArgs<T, E extends Throwable> extends Executor<T, Object, E> {
     
     @Override
     default T execute(Object[] args) throws E {
