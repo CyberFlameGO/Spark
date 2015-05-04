@@ -6,7 +6,7 @@
 package codes.goblom.core.misc;
 
 import codes.goblom.core.internals.Callback;
-import codes.goblom.core.internals.Executor;
+import codes.goblom.core.internals.ExecutorNoArgs;
 import codes.goblom.core.internals.Validater;
 import codes.goblom.core.internals.task.AsyncTask;
 import codes.goblom.core.misc.utils.Utils;
@@ -123,7 +123,7 @@ public class Database {
     /**
      * Loads the Type.OTHER DatabaseType
      */
-    public Database(Executor<Connection, SQLException> exe) throws SQLException {
+    public Database(ExecutorNoArgs<Connection, SQLException> exe) throws SQLException {
         this(Type.OTHER);
 
         this.connection = exe.execute();
@@ -146,7 +146,7 @@ public class Database {
                 return getConnection();
             }
 
-        };
+        }.run();
     }
 
     public int executeUpdate(String sql) {

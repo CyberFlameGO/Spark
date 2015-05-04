@@ -5,10 +5,10 @@
  */
 package codes.goblom.core.internals.task;
 
-import codes.goblom.core.internals.Executor;
 import codes.goblom.core.GoPlugin;
 import codes.goblom.core.Log;
 import codes.goblom.core.internals.Callback;
+import codes.goblom.core.internals.ExecutorNoArgs;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;
@@ -17,7 +17,7 @@ import org.bukkit.scheduler.BukkitTask;
  *
  * @author Goblom
  */
-public abstract class SyncTask<T> implements Executor<T, Throwable> {    
+public abstract class SyncTask<T> implements ExecutorNoArgs<T, Throwable> {    
     private Callback<T> callback = null;
     private final Caller<T> caller;
     private BukkitTask task;

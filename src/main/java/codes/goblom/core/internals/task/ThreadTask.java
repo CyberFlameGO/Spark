@@ -5,8 +5,8 @@
  */
 package codes.goblom.core.internals.task;
 
-import codes.goblom.core.internals.Executor;
 import codes.goblom.core.internals.Callback;
+import codes.goblom.core.internals.ExecutorNoArgs;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
  *
  * @author Goblom
  */
-public abstract class ThreadTask<T> implements Executor<T, Throwable> {
+public abstract class ThreadTask<T> implements ExecutorNoArgs<T, Throwable> {
     
     private Callback<T> callback = null;
     
