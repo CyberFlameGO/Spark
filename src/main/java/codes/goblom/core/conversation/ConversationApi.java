@@ -23,6 +23,8 @@ public class ConversationApi {
 //        return api;
 //    }
     
+    private ConversationApi() { }
+    
     protected static Map<Conversable, ConversationSequencer> conversations = new HashMap();
     
     public static ConversationSequencer prepare(Conversable convo, boolean allowConsole, List<ConversationStep> steps) {

@@ -67,6 +67,8 @@ public class Placeholders {
         public boolean requiresPlayer() { return requiresPlayer; }
     }
     
+    private Placeholders() { }
+    
     private static Map<String, Placeholder> placeholders = Maps.newConcurrentMap();
     private static Map<String, Pattern> patterns = Maps.newConcurrentMap();
     

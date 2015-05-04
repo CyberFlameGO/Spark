@@ -11,6 +11,8 @@ package codes.goblom.core.internals.policy;
  */
 public class Policies {
     
+    private Policies() { }
+    
     public static LoadPolicy newLoadPolicy() {
         return new LoadPolicy(null);
     }

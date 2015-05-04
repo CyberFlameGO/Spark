@@ -26,6 +26,8 @@ import lombok.Getter;
  */
 public class ProxiedMaps {
     
+    private ProxiedMaps() { }
+    
     public static <K, V> HashMap<K, V> newHashMap() {      
         ProxyFactory factory = new ProxyFactory();
                      factory.setSuperclass(HashMap.class);

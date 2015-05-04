@@ -15,6 +15,8 @@ import codes.goblom.core.configuration.types.YamlConfig;
  */
 public class Configs {
     
+    private Configs() { }
+    
     public static final YamlConfig DEFAULT = (YamlConfig) GoPlugin.getInstance().getConfig("config");
     
     public static final YamlConfig CORE = (YamlConfig) GoPlugin.getInstance().getConfig("core");

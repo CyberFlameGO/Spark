@@ -11,6 +11,8 @@ package codes.goblom.core;
  */
 public class Log {
     
+    private Log() { }
+    
     public static void info(String message, Object... vals) {
         if (vals != null && vals.length != 0) {
             GoPlugin.getInstance().getLogger().info(String.format(message, vals));

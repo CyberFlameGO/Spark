@@ -19,6 +19,8 @@ import org.bukkit.scheduler.BukkitTask;
 @Deprecated
 public class Tasks {
     
+    private Tasks() { }
+    
     private static final boolean isBukkitRunnable(Runnable r) {
         return r instanceof BukkitRunnable;
     }
