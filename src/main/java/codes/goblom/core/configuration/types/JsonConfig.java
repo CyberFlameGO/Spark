@@ -107,8 +107,10 @@ public class JsonConfig implements Config {
             if (len == -1) {
                 break;
             }
+            
             sb.append(buff, 0, len);
         }
+        
         return sb.toString();
     }
     
@@ -136,7 +138,14 @@ public class JsonConfig implements Config {
     }
     
     public JSONObject getJSONObject(String tag) {
-        return json.getJSONObject(tag);
+        if (json.has(tag)) {
+            return json.getJSONObject(tag);
+        } else {
+            JSONObject obj = new JSONObject();
+            json.put(tag, obj);
+
+            return obj;
+        }
     }
     
     public JsonConfig deeper(String tag) {
