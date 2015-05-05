@@ -29,7 +29,12 @@ public abstract class ThreadTask<T> implements ExecutorNoArgs<T, Throwable> {
         this.callback = callback;
         this.thread = new Caller<>(this);
     }
-        
+    
+    @Override
+    public final T execute(Object[] args) throws Throwable {
+        return execute();
+    }
+    
     public void start() {
         thread.start();
     }

@@ -38,7 +38,12 @@ public abstract class SyncTask<T> implements ExecutorNoArgs<T, Throwable> {
             Log.warning("Attempted to cancel a task that has not yet started");
         }
     }
-        
+    
+    @Override
+    public final T execute(Object[] args) throws Throwable {
+        return execute();
+    }
+    
     public final BukkitTask run() {
         this.task = Bukkit.getScheduler().runTask(GoPlugin.getInstance(), caller);
         return task;

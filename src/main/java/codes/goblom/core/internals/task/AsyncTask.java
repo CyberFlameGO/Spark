@@ -39,6 +39,11 @@ public abstract class AsyncTask<T> implements ExecutorNoArgs<T, Throwable> {
         }
     }
     
+    @Override
+    public final T execute(Object[] args) throws Throwable {
+        return execute();
+    }
+    
     public final BukkitTask run() {
         this.task = Bukkit.getScheduler().runTaskAsynchronously(GoPlugin.getInstance(), caller);
         return task;
