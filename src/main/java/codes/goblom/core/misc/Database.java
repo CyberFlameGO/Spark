@@ -5,6 +5,8 @@
  */
 package codes.goblom.core.misc;
 
+import codes.goblom.core.GoPlugin;
+import codes.goblom.core.configuration.Config;
 import codes.goblom.core.internals.Callback;
 import codes.goblom.core.internals.ExecutorNoArgs;
 import codes.goblom.core.internals.Validater;
@@ -24,8 +26,6 @@ import java.sql.Statement;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Stream;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -482,5 +482,39 @@ public class Database {
         public <T> T dataAs(Class<T> type) {
             return (T) data();
         }
+    }
+    
+    /**
+     * Connect to the Database using information provided by the user
+     * 
+     * @throws java.sql.SQLException if there was an error connecting to the database
+     */
+    public static Database GenericConnect() throws SQLException {
+        Config cfg = GoPlugin.getInstance().getConfig("database_settings");
+        
+        Type type = Type.valueOf(cfg.get("type", Type.MySQL.name()));
+        Database db = null;
+        
+        switch (type) {
+            case MySQL:
+                String host = cfg.get("host", "localhost");
+                int port = cfg.get("port", 3306);
+                String username = cfg.get("username", "root");
+                String password = cfg.get("password", "");
+                String dbName = cfg.get("dbName", "minecraft");
+                
+                db = new Database(host, port, dbName, username, password);
+                break;
+            case SQLite:
+                String file = cfg.get("file", "database.db");
+                
+                db = new Database(file);
+                break;
+            case OTHER:
+                throw new IllegalArgumentException("Database.GenericConnect() does not support Database.Type.OTHER");
+        }
+        
+        
+        return db;
     }
 }
