@@ -68,8 +68,18 @@ public class Database {
     @AllArgsConstructor
     public static enum Type {
 
+        /**
+         * {host} -- The URL of the MySQL Server
+         * {port} -- The port of the MySQL server
+         * {database} -- The Database name you are connecting to
+         */
         MySQL("com.mysql.jdbc.Drive", "jdbc:mysql://{host}:{port}/{database}?autoReconnect=true"),
+        
+        /**
+         * {file} -- The file of the SQLite database
+         */
         SQLite("org.sqlite.JDBC", "jdbc:sqlite:{file}"),
+        
         /**
          * Update this with your custom JDBC Driver & Loading arguments
          *
@@ -130,8 +140,9 @@ public class Database {
      * Loads the Type.OTHER DatabaseType
      */
     public Database(ExecutorNoArgs<Connection, SQLException> exe) throws SQLException {
-        this(Type.OTHER);
-
+//        this(Type.OTHER);
+        this.type = Type.OTHER;
+        
         this.connection = exe.execute();
 
         if (Utils.isNull(this.connection)) {
@@ -388,8 +399,10 @@ public class Database {
             public Boolean execute() throws Throwable {
                 return tableContains(table, column, value);
             }        
+            
         }.run();
     }
+    
     public boolean isClosed() {
         boolean b = false;
         
