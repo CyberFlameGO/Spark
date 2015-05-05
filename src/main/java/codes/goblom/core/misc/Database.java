@@ -24,6 +24,8 @@ import java.sql.Statement;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -358,6 +360,36 @@ public class Database {
         }.run();
     }
     
+    public boolean tableContains(String table, String column, Object value) {
+        final String sql = "SELECT COUNT(%s) AS %s Count FROM %s WHERE %s='%s'";
+        final ResultSet rs = executeQuery(sql, column, column, table, column, value);
+        
+        try {
+            if (rs == null || rs.isAfterLast()) {
+                return false;
+            }
+            
+            if (rs.isBeforeFirst()) {
+                rs.next();
+            }
+            
+            return rs.getInt(1) != 0;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        
+        return false;
+    }
+    
+    public void tableContainsAsync(String table, String column, Object value, Callback<Boolean> callback) {
+        new AsyncTask<Boolean>(callback) {
+
+            @Override
+            public Boolean execute() throws Throwable {
+                return tableContains(table, column, value);
+            }        
+        }.run();
+    }
     public boolean isClosed() {
         boolean b = false;
         
