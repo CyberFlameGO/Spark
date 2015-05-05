@@ -5,6 +5,7 @@
  */
 package codes.goblom.core.internals.tools;
 
+import codes.goblom.core.GoPlugin;
 import codes.goblom.core.internals.Executor;
 import codes.goblom.core.misc.utils.PlayerUtils;
 import com.google.common.collect.Maps;
@@ -12,6 +13,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 /**
@@ -43,6 +45,30 @@ public class Placeholders {
             @Override
             public Object execute(Player[] args) throws Throwable {
                 return PlayerUtils.getPing(args[0]);
+            }
+        });
+        
+        register(new AbstractPlaceholder("{server:ip}", false, false){
+
+            @Override
+            public Object execute(Player[] args) throws Throwable {
+                return Bukkit.getIp();
+            }
+        });
+        
+        register(new AbstractPlaceholder("{server:name}", false, false) {
+
+            @Override
+            public Object execute(Player[] args) throws Throwable {
+                return Bukkit.getServerName();
+            }
+        });
+        
+        register(new AbstractPlaceholder("{server:version}", false, false) {
+
+            @Override
+            public Object execute(Player[] args) throws Throwable {
+                return GoPlugin.getInstance().getReflection().getVersion();
             }
         });
     }
