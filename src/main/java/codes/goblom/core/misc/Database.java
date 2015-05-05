@@ -50,11 +50,15 @@ public class Database {
         });
         
         Utils.addNullCheckValidater((Validater<ResultSet>) (ResultSet obj) -> {
+            boolean b = false;
+
             try {
-                return obj.isClosed();
+                b = obj.isClosed();
             } catch (SQLException ex) {
-                return false;
+                ex.printStackTrace();
             }
+
+            return b;
         });
         
     }
@@ -366,15 +370,16 @@ public class Database {
         return b;
     }
     
-    public ResultSetIterator createIterator(ResultSet rs) {
-        return new ResultSetIterator(rs);
+    public SimpleResultSetIterator createSimpleIterator(ResultSet rs) {
+        return new SimpleResultSetIterator(rs);
     }
     
-    public static class ResultSetIterator implements Iterable<ResultSetIteratorEntry> {
+    
+    public static class SimpleResultSetIterator implements Iterable<ResultSetIteratorEntry> {
 
         private final List<ResultSetIteratorEntry> data = Lists.newLinkedList();
         
-        private ResultSetIterator(ResultSet rs) {
+        private SimpleResultSetIterator(ResultSet rs) {
             if (Utils.isNull(rs)) {
                 throw new RuntimeException("ResultSet cannot be null or closed");
             }
