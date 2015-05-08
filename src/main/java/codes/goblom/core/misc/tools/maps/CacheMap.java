@@ -3,7 +3,7 @@
  * 
  * All Rights Reserved unless otherwise explicitly stated.
  */
-package codes.goblom.core.misc.map;
+package codes.goblom.core.misc.tools.maps;
 
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Maps;

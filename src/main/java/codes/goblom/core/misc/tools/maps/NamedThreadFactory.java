@@ -1,4 +1,4 @@
-package codes.goblom.core.misc.map;
+package codes.goblom.core.misc.tools.maps;
 
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;

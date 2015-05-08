@@ -3,11 +3,11 @@
  * 
  * All Rights Reserved unless otherwise explicitly stated.
  */
-package codes.goblom.core.misc.map;
+package codes.goblom.core.misc.tools.maps;
 
 import codes.goblom.core.Log;
-import codes.goblom.core.misc.map.ExpiringMap.Builder;
-import codes.goblom.core.misc.map.ExpiringMap.ExpirationListener;
+import codes.goblom.core.misc.tools.maps.ExpiringMap.Builder;
+import codes.goblom.core.misc.tools.maps.ExpiringMap.ExpirationListener;
 import java.lang.reflect.Method;
 import java.util.EnumMap;
 import java.util.HashMap;
