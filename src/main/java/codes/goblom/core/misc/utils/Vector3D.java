@@ -16,12 +16,14 @@ import org.bukkit.util.Vector;
  * @author Goblom
  */
 @AllArgsConstructor
-public class Vector3D {
+public class Vector3D implements Cloneable {
     
-    public static Vector3D ORIGIN = new Vector3D(0, 0, 0);
+    public static final Vector3D ORIGIN = new Vector3D(0, 0, 0);
     
     @Getter
     protected double x, y, z;
+    
+    private Vector3D() { }
     
     public Vector3D(Location location) {
         this(location.toVector());
@@ -128,6 +130,16 @@ public class Vector3D {
     
     public Location toLocation(World world) {
         return new Location(world, x, y, z);
+    }
+    
+    @Override
+    public Vector3D clone() {
+        Vector3D vector = new Vector3D();
+                 vector.x = this.x;
+                 vector.y = this.y;
+                 vector.z = this.z;
+                 
+        return vector;
     }
     
     @Override
