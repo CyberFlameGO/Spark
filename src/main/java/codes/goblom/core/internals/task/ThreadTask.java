@@ -6,6 +6,7 @@
 package codes.goblom.core.internals.task;
 
 import codes.goblom.core.internals.Callback;
+import codes.goblom.core.internals.ExecutorArgs;
 import codes.goblom.core.internals.ExecutorNoArgs;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,7 @@ public abstract class ThreadTask<T> implements ExecutorNoArgs<T, Throwable> {
     }
     
     @Override
-    public final T execute(Object[] args) throws Throwable {
+    public final T execute(ExecutorArgs args) throws Throwable {
         return execute();
     }
     

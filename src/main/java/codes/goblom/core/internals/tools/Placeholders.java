@@ -7,6 +7,7 @@ package codes.goblom.core.internals.tools;
 
 import codes.goblom.core.GoPlugin;
 import codes.goblom.core.internals.Executor;
+import codes.goblom.core.internals.ExecutorArgs;
 import codes.goblom.core.misc.utils.PlayerUtils;
 import com.google.common.collect.Maps;
 import java.util.Map;
@@ -27,31 +28,31 @@ public class Placeholders {
         register(new AbstractPlaceholder("{player:name}", false, true) {
             
             @Override
-            public Object execute(Player[] args) throws Throwable {
-                return args[0].getName();
+            public Object execute(ExecutorArgs args) throws Throwable {
+                return args.getAs(Player.class).getName();
             }
         });
         
         register(new AbstractPlaceholder("{player:level}", false, true) {
 
             @Override
-            public Object execute(Player[] args) throws Throwable {
-                return args[0].getLevel();
+            public Object execute(ExecutorArgs args) throws Throwable {
+                return args.getAs(Player.class).getLevel();
             }
         });
         
         register(new AbstractPlaceholder("{player:ping}", false, true) {
 
             @Override
-            public Object execute(Player[] args) throws Throwable {
-                return PlayerUtils.getPing(args[0]);
+            public Object execute(ExecutorArgs args) throws Throwable {
+                return PlayerUtils.getPing(args.getAs(Player.class));
             }
         });
         
         register(new AbstractPlaceholder("{server:ip}", false, false){
 
             @Override
-            public Object execute(Player[] args) throws Throwable {
+            public Object execute(ExecutorArgs args) throws Throwable {
                 return Bukkit.getIp();
             }
         });
@@ -59,7 +60,7 @@ public class Placeholders {
         register(new AbstractPlaceholder("{server:name}", false, false) {
 
             @Override
-            public Object execute(Player[] args) throws Throwable {
+            public Object execute(ExecutorArgs args) throws Throwable {
                 return Bukkit.getServerName();
             }
         });
@@ -67,7 +68,7 @@ public class Placeholders {
         register(new AbstractPlaceholder("{server:version}", false, false) {
 
             @Override
-            public Object execute(Player[] args) throws Throwable {
+            public Object execute(ExecutorArgs args) throws Throwable {
                 return GoPlugin.getInstance().getReflection().getVersion();
             }
         });
@@ -135,14 +136,14 @@ public class Placeholders {
                 
                 try {
                     if (matcher.matches()) {
-                        msg = matcher.replaceAll(p.execute(new Player[] { player }).toString());
+                        msg = matcher.replaceAll(p.execute(ExecutorArgs.Builder().put(player).build()).toString());
                     }
                 } catch (Throwable t) {
                     t.printStackTrace();
                 }
             } else {
                 try {
-                    msg = msg.replace(p.getKey(), p.execute(new Player[] { player }).toString());
+                    msg = msg.replace(p.getKey(), p.execute(ExecutorArgs.Builder().put(player).build()).toString());
                 } catch (Throwable e) {
                     e.printStackTrace();
                 }
@@ -152,7 +153,7 @@ public class Placeholders {
         return ChatColor.translateAlternateColorCodes('&', msg);
     }
     
-    public static interface Placeholder extends Executor<Object, Player, Throwable> {
+    public static interface Placeholder extends Executor<Object, Throwable> {
         
         String getKey();
         

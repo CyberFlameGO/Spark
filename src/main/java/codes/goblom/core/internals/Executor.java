@@ -9,7 +9,7 @@ package codes.goblom.core.internals;
  *
  * @author Goblom
  */
-public interface Executor<T, A, E extends Throwable> {
+public interface Executor<T, E extends Throwable> {
     
-    T execute(A[] args) throws E;
+    T execute(ExecutorArgs args) throws E;
 }
