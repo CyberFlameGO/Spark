@@ -178,6 +178,10 @@ class ConversationSequencerImpl extends ValidatingPrompt implements Conversation
     
     @Override
     public final void abort() {
+        if (aborted) {
+            return;
+        }
+        
         if (conversation == null) {
             this.conversation = factory.buildConversation(this.conversable);
         }
