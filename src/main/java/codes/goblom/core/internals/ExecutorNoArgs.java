@@ -12,7 +12,7 @@ package codes.goblom.core.internals;
 public interface ExecutorNoArgs<T, E extends Throwable> extends Executor<T, E> {
 
     @Override
-    public default T execute(ExecutorArgs args) throws E {
+    default T execute(ExecutorArgs args) throws E {
         return execute();
     }
     
