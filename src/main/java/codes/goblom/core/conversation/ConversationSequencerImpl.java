@@ -185,6 +185,8 @@ class ConversationSequencerImpl extends ValidatingPrompt implements Conversation
         conversation.abandon();
         
         this.aborted = true;
+        
+        ConversationApi.removeSequence(conversable);
     }
     
     @Override

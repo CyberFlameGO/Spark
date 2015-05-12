@@ -7,6 +7,8 @@ package codes.goblom.core;
 
 import codes.goblom.core.configuration.Config;
 import codes.goblom.core.configuration.ConfigType;
+import codes.goblom.core.conversation.ConversationApi;
+import codes.goblom.core.conversation.ConversationSequencer;
 import codes.goblom.core.internals.task.AsyncTask;
 import codes.goblom.core.internals.Callback;
 import codes.goblom.core.internals.GoLib;
@@ -19,10 +21,13 @@ import codes.goblom.core.misc.utils.PlayerUtils;
 import codes.goblom.core.reflection.Reflection;
 import com.google.common.collect.Maps;
 import java.io.File;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import lombok.Getter;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.conversations.Conversable;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -115,6 +120,12 @@ public abstract class GoPlugin extends JavaPlugin implements GoLib {
 //            t.printStackTrace();
 //            Log.severe("There was an error while disabling %s. (located above)", getName());
 //        } 
+            
+        Iterator<Entry<Conversable, ConversationSequencer>> it = ConversationApi.iterator();
+        
+        while (it.hasNext()) {
+            it.next().getValue().abort();
+        }
     }
     
     @Override
