@@ -90,6 +90,45 @@ public class ItemUtils {
         return item;
     }
     
+    public static ItemStack removeAttributes(ItemStack item) {
+        if (item == null) {
+            return item;
+        }
+        
+        SafeClass NMSItemStack = GoPlugin.getInstance().getReflection().getNMSClass("ItemStack");
+        SafeClass NBTTagCompound = GoPlugin.getInstance().getReflection().getNMSClass("NBTTagCompund");
+        SafeClass NBTBase = GoPlugin.getInstance().getReflection().getNMSClass("NBTBase");
+        SafeClass NBTTagList = GoPlugin.getInstance().getReflection().getNMSClass("NBTTagList");
+        SafeClass CraftItemStack = GoPlugin.getInstance().getReflection().getCraftClass("CraftItemStack");
+
+        SafeMethod asNMSCopy = CraftItemStack.getMethod("asNMSCopy", ItemStack.class);
+        SafeMethod<ItemStack> asCraftMirror = CraftItemStack.getMethod("asCraftMirror", NMSItemStack.unsafe());
+        SafeMethod<Boolean> hasTag = NMSItemStack.getMethod("hasTag");
+        SafeMethod<Void> setTag = NMSItemStack.getMethod("setTag", NBTTagCompound.unsafe());
+        SafeMethod getTag = NMSItemStack.getMethod("getTag");
+        SafeMethod<Void> set = NBTTagCompound.getMethod("set", String.class, NBTBase.unsafe());
+        
+        SafeObject nmsCopy = asNMSCopy.invoke(null, item);
+        
+        if (nmsCopy == null) {
+            return item;
+        }
+        
+        SafeObject tag;
+        if (!hasTag.invokeGeneric(nmsCopy)) {
+            tag = NBTTagCompound.newInstance();
+            setTag.invoke(nmsCopy, tag);
+        } else {
+            tag = getTag.invoke(nmsCopy);
+        }
+        
+        SafeObject tagList = NBTTagList.newInstance();
+        set.invokeGeneric(tag, "AttributeModifiers", tagList);
+        setTag.invokeGeneric(nmsCopy, tag);
+        
+        return asCraftMirror.invokeGeneric(null, nmsCopy);
+    }
+    
     public static Builder build(Material mat) {
         return itemUtils.new Builder(mat);
     }
