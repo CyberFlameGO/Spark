@@ -108,4 +108,18 @@ public class SafeMethod<T> implements Safe<Method> {
         
         return null;
     }
+    
+    public T invokeGeneric(Object instance, Object... args) {
+        if (!isStatic() && instance == null) {
+            throw new UnsupportedOperationException("Non-static fields require a non-null instance passed in!");
+        }
+        
+        try {
+            return (T) unsafe().invoke(instance, args);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return null;
+    }
 }
