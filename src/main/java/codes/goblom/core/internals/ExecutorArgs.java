@@ -6,6 +6,7 @@
 package codes.goblom.core.internals;
 
 import com.google.common.collect.Maps;
+import java.util.Iterator;
 import java.util.Map;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -15,9 +16,11 @@ import lombok.RequiredArgsConstructor;
  * @author Goblom
  */
 @RequiredArgsConstructor( access = AccessLevel.PROTECTED )
-public class ExecutorArgs {
+public class ExecutorArgs implements Iterable<Object> {
 
-    private final Object[] objects;
+    protected static final Object[] EMPTY_OBJECT_ARRAY = { };
+    
+    protected final Object[] objects;
 
     public Object get() {
         return get(0);
@@ -43,8 +46,21 @@ public class ExecutorArgs {
         return (T) get(i);
     }
     
+    public boolean is(Class type) {
+        return type.isAssignableFrom(get().getClass());
+    }
+    
+    public boolean is(int i, Class type) {
+        return type.isAssignableFrom(get(i).getClass());
+    }
+    
     public static Builder Builder() {
         return new Builder();
+    }
+
+    @Override
+    public Iterator<Object> iterator() {
+        return new ExecutorArgsIterator(this);
     }
     
     public static class Builder {
@@ -61,7 +77,7 @@ public class ExecutorArgs {
         
         public ExecutorArgs build() {
             if (slot == 0) {
-                return new ExecutorArgs(new Object[] { });
+                return new ExecutorArgs(EMPTY_OBJECT_ARRAY);
             }
             
             Object[] args = new Object[slot - 1];
@@ -71,6 +87,22 @@ public class ExecutorArgs {
             });
             
             return new ExecutorArgs(args);
+        }
+    }
+    
+    @RequiredArgsConstructor
+    static class ExecutorArgsIterator implements Iterator<Object> {
+        private final ExecutorArgs args;
+        private int index = 0;
+        
+        @Override
+        public boolean hasNext() {
+            return index < args.objects.length && args.objects[index] != null;
+        }
+
+        @Override
+        public Object next() {
+            return args.objects[index++];
         }
     }
 }

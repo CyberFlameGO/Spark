@@ -11,5 +11,7 @@ package codes.goblom.core.internals;
  */
 public interface Executor<T, E extends Throwable> {
     
+    public static final ExecutorArgs EMPTY_ARGS = ExecutorArgs.Builder().build();
+    
     T execute(ExecutorArgs args) throws E;
 }
