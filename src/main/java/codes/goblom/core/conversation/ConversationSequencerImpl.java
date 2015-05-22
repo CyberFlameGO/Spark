@@ -4,6 +4,7 @@ import codes.goblom.core.GoPlugin;
 import codes.goblom.core.Log;
 import lombok.Getter;
 import codes.goblom.core.conversation.ConversationStep.StepResult;
+import codes.goblom.core.internals.tools.Placeholders;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -157,12 +158,12 @@ class ConversationSequencerImpl extends ValidatingPrompt implements Conversation
 
     @Override
     public final String getPromptText(ConversationContext context) {
-        return current().getMessage(context);
+        return Placeholders.parse(current().getMessage(context), this.conversable);
     }
     
     @Override
     protected final String getFailedValidationText(ConversationContext context, String input) {
-        return current().getFailedText(context, input);
+        return Placeholders.parse(current().getFailedText(context, input), this.conversable);
     }
     
     @Override

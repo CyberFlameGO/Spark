@@ -1,5 +1,6 @@
 package codes.goblom.core.conversation;
 
+import codes.goblom.core.internals.tools.Placeholders;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,6 +11,8 @@ import org.bukkit.conversations.ConversationContext;
  *
  * @author Goblom
  */
+
+// ??? Convert to Executor<StepResult, Throwable> and build ExecutorArgs with Context & input
 public abstract class ConversationStep {
     
     protected String getPrefix() {
@@ -21,7 +24,7 @@ public abstract class ConversationStep {
     }
     
     protected void sendMessage(ConversationContext context, String message) {
-        context.getForWhom().sendRawMessage(generate(message));
+        context.getForWhom().sendRawMessage(Placeholders.parse(message, context.getForWhom()));
     }
     
     @Getter(AccessLevel.PROTECTED)

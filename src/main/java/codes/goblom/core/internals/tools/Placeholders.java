@@ -15,6 +15,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.conversations.Conversable;
 import org.bukkit.entity.Player;
 
 /**
@@ -115,6 +116,10 @@ public class Placeholders {
     
     public static String parse(String msg) {
         return parse(msg, null);
+    }
+    
+    public static String parse(String msg, Conversable convo) {
+        return parse(msg, convo instanceof Player ? (Player) convo : null);
     }
     
     public static String parse(String msg, Player player) {
