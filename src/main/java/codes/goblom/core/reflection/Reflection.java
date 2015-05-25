@@ -82,7 +82,11 @@ public class Reflection {
         return getEnumValue(enumClass.unsafe2(), value);
     }
     
-    public static Enum<?> getEnumValue(Class<? extends Enum> enumClass, String value) {
+    public static Enum<?> getEnumValue(Class enumClass, String value) {
+        if (!enumClass.isEnum()) {
+            return null;
+        }
+        
         try {
             return Enum.valueOf(enumClass, value);
         } catch (Exception e) {
