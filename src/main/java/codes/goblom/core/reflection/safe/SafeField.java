@@ -5,7 +5,7 @@
  */
 package codes.goblom.core.reflection.safe;
 
-//import codes.goblom.core.Log;
+import codes.goblom.core.Log;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
@@ -30,7 +30,7 @@ public class SafeField<R> implements Safe<Field> {
         }
         
         if (field == null) {
-//            Log.severe("Class [%s] does does not have a superclass that has field [%s]", coreClass.getSimpleName(), fieldName);
+            Log.severe("Class [%s] does does not have a superclass that has field [%s]", coreClass.getSimpleName(), fieldName);
         }
         
         this.unsafe = field;
