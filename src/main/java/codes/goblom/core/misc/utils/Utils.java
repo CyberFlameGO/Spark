@@ -10,7 +10,6 @@ import com.google.common.collect.Lists;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
-import org.bukkit.Location;
 
 /**
  *
@@ -51,19 +50,6 @@ public class Utils {
             builder.append(args[i]);
         }
         return builder.toString();
-    }
-    
-    public static List<Location> generateHelix(Location loc, int radius, double height) {
-        List<Location> list = Lists.newLinkedList();
-        
-        for (double y = 0; y < height; y += 0.5) {
-            double x = radius * Math.cos(y);
-            double z = radius * Math.sin(y);
-            
-            list.add(new Location(loc.getWorld(), loc.getX() + x, loc.getY() + y, loc.getZ() + z));
-        }
-        
-        return list;
     }
     
     // TODO: Update

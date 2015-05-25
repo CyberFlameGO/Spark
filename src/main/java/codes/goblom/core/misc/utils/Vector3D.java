@@ -158,4 +158,16 @@ public class Vector3D implements Cloneable {
         @Override public Vector3D add(double x, double y, double z) { return this; }
         @Override public Vector3D add(Vector3D other) { return this; }
     }
+    
+    public static Vector3D fromLocation(Location l) {
+        return new Vector3D(l);
+    }
+    
+    public static Vector3D fromVector(Vector v) {
+        return new Vector3D(v);
+    }
+    
+    public static Vector3D fromOrigin() {
+        return ORIGIN.clone();
+    }
 }
