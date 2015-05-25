@@ -12,6 +12,7 @@ import codes.goblom.core.internals.ExecutorArgs;
 import codes.goblom.core.internals.Validater;
 import codes.goblom.core.misc.utils.PlayerUtils;
 import codes.goblom.core.misc.utils.Utils;
+import codes.goblom.core.reflection.Reflection;
 import com.google.common.collect.Maps;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -79,7 +80,7 @@ public class Placeholders {
 
             @Override
             public Object execute(ExecutorArgs args) throws Throwable {
-                return GoPlugin.getInstance().getReflection().getVersion();
+                return Reflection.getVersion();
             }
         });
     }

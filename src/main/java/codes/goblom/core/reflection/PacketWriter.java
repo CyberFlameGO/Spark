@@ -45,13 +45,7 @@ public class PacketWriter {
     }
     
     private static Class<?> getNMSClass(String name) {
-        Class<?> clazz = null;
-        try {
-            clazz = Class.forName("net.minecraft.server." + GoPlugin.getInstance().getReflection() + "." + name);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return clazz;
+        return Reflection.getNMSClass(name).unsafe();
     }
     
     private static Field getField(Class<?> clazz, String name) {

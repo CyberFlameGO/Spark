@@ -45,7 +45,7 @@ public class PlayerUtils {
     }
     
     public static int getPing(Player player) {
-        SafeClass CraftPlayer = GoPlugin.getInstance().getReflection().getCraftClass("entity.CraftPlayer");
+        SafeClass CraftPlayer = Reflection.getCraftClass("entity.CraftPlayer");
         SafeObject handle = CraftPlayer.getMethod("getHandle").invoke(player);
         SafeClass EntityPlayer = handle.getSafeClass();
         SafeField<Integer> ping = EntityPlayer.getField("ping");
@@ -54,11 +54,9 @@ public class PlayerUtils {
     }
     
     public static void forceRespawn(Player player) {
-        Reflection version = GoPlugin.getInstance().getReflection();
-        
-        SafeClass CraftPlayer = version.getCraftClass("entity.CraftPlayer");
-        SafeClass PacketPlayInClientCommand = version.getNMSClass("PacketPlayInClientCommand");
-        SafeClass EnumClientCommand = version.getNMSClass("EnumClientCommand");
+        SafeClass CraftPlayer = Reflection.getCraftClass("entity.CraftPlayer");
+        SafeClass PacketPlayInClientCommand = Reflection.getNMSClass("PacketPlayInClientCommand");
+        SafeClass EnumClientCommand = Reflection.getNMSClass("EnumClientCommand");
         
         SafeMethod handle = CraftPlayer.getMethod("getHandle");
         
@@ -74,7 +72,7 @@ public class PlayerUtils {
     }
     
     public static void setMaxPlayers(int max) {
-        SafeClass CraftServer = GoPlugin.getInstance().getReflection().getCraftClass("CraftServer");
+        SafeClass CraftServer = Reflection.getCraftClass("CraftServer");
         SafeMethod getHandle = CraftServer.getMethod("getHandle");
         SafeObject handle = getHandle.invoke(Bukkit.getServer());
         

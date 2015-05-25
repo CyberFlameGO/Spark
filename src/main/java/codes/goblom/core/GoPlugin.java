@@ -18,7 +18,6 @@ import codes.goblom.core.misc.tools.BukkitDevUpdater;
 import codes.goblom.core.misc.tools.Metrics;
 import codes.goblom.core.misc.tools.SpigotUpdater;
 import codes.goblom.core.misc.utils.PlayerUtils;
-import codes.goblom.core.reflection.Reflection;
 import com.google.common.collect.Maps;
 import java.io.File;
 import java.util.Iterator;
@@ -44,14 +43,10 @@ public abstract class GoPlugin extends JavaPlugin implements GoLib {
     @Getter
     private static GoPlugin instance;
     
-    @Getter
-    private final Reflection reflection;
-    
     public GoPlugin() {
         super();
         
         GoPlugin.instance = this;
-        this.reflection = new Reflection();
     }
     
     public void load() { }

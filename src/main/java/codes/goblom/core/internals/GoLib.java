@@ -23,8 +23,6 @@ import org.bukkit.event.Listener;
  */
 public interface GoLib {
     
-    Reflection getReflection();
-    
     void reloadConfig();
     
     void saveConfig();

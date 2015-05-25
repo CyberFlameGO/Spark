@@ -5,8 +5,8 @@
  */
 package codes.goblom.core.misc.utils;
 
-import codes.goblom.core.GoPlugin;
 import codes.goblom.core.Log;
+import codes.goblom.core.reflection.Reflection;
 import codes.goblom.core.reflection.safe.SafeClass;
 import codes.goblom.core.reflection.safe.SafeMethod;
 import codes.goblom.core.reflection.safe.SafeObject;
@@ -61,7 +61,7 @@ public class ItemUtils {
     }
     
     public static String getItemCode(ItemStack item) {
-        SafeClass CraftItemStack = GoPlugin.getInstance().getReflection().getCraftClass("inventory.CraftItemStack");
+        SafeClass CraftItemStack = Reflection.getCraftClass("inventory.CraftItemStack");
         SafeMethod asNMSCopy = CraftItemStack.getMethod("asNMSCopy", ItemStack.class);
         SafeObject nmsCopy = asNMSCopy.invoke(null, item);
         
@@ -95,11 +95,11 @@ public class ItemUtils {
             return item;
         }
         
-        SafeClass NMSItemStack = GoPlugin.getInstance().getReflection().getNMSClass("ItemStack");
-        SafeClass NBTTagCompound = GoPlugin.getInstance().getReflection().getNMSClass("NBTTagCompund");
-        SafeClass NBTBase = GoPlugin.getInstance().getReflection().getNMSClass("NBTBase");
-        SafeClass NBTTagList = GoPlugin.getInstance().getReflection().getNMSClass("NBTTagList");
-        SafeClass CraftItemStack = GoPlugin.getInstance().getReflection().getCraftClass("CraftItemStack");
+        SafeClass NMSItemStack = Reflection.getNMSClass("ItemStack");
+        SafeClass NBTTagCompound = Reflection.getNMSClass("NBTTagCompund");
+        SafeClass NBTBase = Reflection.getNMSClass("NBTBase");
+        SafeClass NBTTagList = Reflection.getNMSClass("NBTTagList");
+        SafeClass CraftItemStack = Reflection.getCraftClass("CraftItemStack");
 
         SafeMethod asNMSCopy = CraftItemStack.getMethod("asNMSCopy", ItemStack.class);
         SafeMethod<ItemStack> asCraftMirror = CraftItemStack.getMethod("asCraftMirror", NMSItemStack.unsafe());
