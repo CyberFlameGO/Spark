@@ -5,12 +5,14 @@
  */
 package testing;
 
-import codes.goblom.core.Configs;
-import codes.goblom.core.GoPlugin;
-import codes.goblom.core.Log;
-import codes.goblom.core.internals.monitor.types.LagMonitor;
-import codes.goblom.core.internals.task.SyncTask;
-import codes.goblom.core.misc.utils.Utils;
+import codes.goblom.spark.Configs;
+import codes.goblom.spark.SparkPlugin;
+import codes.goblom.spark.Log;
+import codes.goblom.spark.internals.monitor.Monitors;
+import codes.goblom.spark.internals.policy.Policies;
+import codes.goblom.spark.internals.task.SyncTask;
+import codes.goblom.spark.misc.Colorize;
+import codes.goblom.spark.scoreboard.FastScoreboard;
 import java.util.Arrays;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -19,7 +21,7 @@ import org.bukkit.ChatColor;
  *
  * @author Goblom
  */
-public class TestPlugin extends GoPlugin {
+public class TestPlugin extends SparkPlugin {
 
     @Override
     public void enable() {
@@ -28,6 +30,7 @@ public class TestPlugin extends GoPlugin {
         Configs.TEST_JSON.set("list", Arrays.asList("entry 1", "entry 2", "entry 3"));
         Configs.TEST_JSON.set("integer", 1);
         Configs.TEST_JSON.set("string", "test string");
+        Configs.TEST_JSON.deeper("inner").set("test", true);
         Configs.TEST_JSON.save();
     }
     
@@ -47,6 +50,30 @@ public class TestPlugin extends GoPlugin {
 //            }
 //            
 //        }.runTimer(0, 20 * 3);
+        
+        final FastScoreboard fs = Monitors.loadNoStore(FastScoreboard.class, Policies.newLoadPolicy().constructor(String.class).values("Test Scoreboard"));
+                             fs.add("Test Score", 1);
+        
+        new SyncTask<Void>() {
+            @Override
+            public Void execute() throws Throwable {
+                fs.sendAll();
+                
+                return null;
+            }
+        }.runLater(20 * 60);
+        
+        new SyncTask<Void>() {
+            int i = 0;
+            
+            @Override
+            public Void execute() throws Throwable {
+                fs.setTitle(String.valueOf(i++));
+                fs.add(Colorize.style("Test Score").toGarbage(), 1);
+                
+                return null;
+            }
+        }.runTimer(0, 20);
     }
     
     public static void message(String str) {
