@@ -6,9 +6,12 @@
 package codes.goblom.core.internals.tools;
 
 import codes.goblom.core.GoPlugin;
+import codes.goblom.core.Log;
 import codes.goblom.core.internals.Executor;
 import codes.goblom.core.internals.ExecutorArgs;
+import codes.goblom.core.internals.Validater;
 import codes.goblom.core.misc.utils.PlayerUtils;
+import codes.goblom.core.misc.utils.Utils;
 import com.google.common.collect.Maps;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -26,6 +29,10 @@ public class Placeholders {
     
     // TODO: Add more
     static {
+        Utils.addValidaterCheck((Validater<Placeholder>) (placeholder) -> {
+            return Utils.isValid(placeholder.getKey());
+        });
+        
         register(new AbstractPlaceholder("{player:name}", false, true) {
             
             @Override
@@ -101,6 +108,11 @@ public class Placeholders {
     private static Map<String, Pattern> patterns = Maps.newConcurrentMap();
     
     public static boolean register(Placeholder placeholder) {
+        if (!Utils.isValid(placeholder)) {
+            Log.warning("A Placeholders key cannot be null or empty");
+            return false;
+        }
+        
         if (placeholders.containsKey(placeholder.getKey())) {
             return false;
         }
