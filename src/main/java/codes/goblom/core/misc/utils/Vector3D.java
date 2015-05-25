@@ -30,7 +30,7 @@ public class Vector3D implements Cloneable {
     }
 
     public Vector3D(Vector vector) {
-        if (Utils.isNull(vector)) {
+        if (Utils.isValid(vector)) {
             throw new IllegalArgumentException("Vector cannot be null in Vector3D");
         }
         
@@ -44,7 +44,7 @@ public class Vector3D implements Cloneable {
     }
     
     public Vector3D add(Vector3D other) {
-        if (Utils.isNull(other)) {
+        if (Utils.isValid(other)) {
             throw new IllegalArgumentException("other cannot be added if it is null");
         }
         
@@ -64,7 +64,7 @@ public class Vector3D implements Cloneable {
     }
     
     public Vector3D subtract(Vector3D other) {
-        if (Utils.isNull(other)) {
+        if (Utils.isValid(other)) {
             throw new IllegalArgumentException("other cannot be subtracted if it is null");
         }
         

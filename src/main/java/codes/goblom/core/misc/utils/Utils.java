@@ -20,11 +20,13 @@ public class Utils {
 
     private Utils() { }
     
+    public static final double PERFECT_TPS = 20.0000D;
     public static final Random RANDOM = new Random();
-    private static final List<Validater> NULL_CHECK =  Lists.newLinkedList();
+    
+    private static final List<Validater> VALID_CHECK =  Lists.newLinkedList();
     
     static {
-        NULL_CHECK.add((Validater<String>) (String obj) -> obj == null || obj.equals(""));
+        VALID_CHECK.add((Validater<String>) (String obj) -> obj == null || obj.equals(""));
     }
     
     public static String getFormattedTime(int time) {
@@ -82,13 +84,13 @@ public class Utils {
         return 9;
     }
     
-    public static void addNullCheckValidater(Validater v) {
-        NULL_CHECK.add(v);
+    public static void addValidaterCheck(Validater v) {
+        VALID_CHECK.add(v);
     }
     
-    public static boolean isNull(Object o) {
+    public static boolean isValid(Object o) {
         boolean is = (o == null);
-        Iterator<Validater> it = NULL_CHECK.iterator();
+        Iterator<Validater> it = VALID_CHECK.iterator();
         
         while (!is && it.hasNext()) {
             Validater v = it.next();

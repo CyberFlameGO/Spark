@@ -6,6 +6,7 @@
 package codes.goblom.core.misc;
 
 import codes.goblom.core.GoPlugin;
+import codes.goblom.core.Log;
 import codes.goblom.core.configuration.Config;
 import codes.goblom.core.internals.Callback;
 import codes.goblom.core.internals.ExecutorNoArgs;
@@ -39,7 +40,7 @@ import lombok.RequiredArgsConstructor;
 public class Database {
 
     static {
-        Utils.addNullCheckValidater((Validater<Connection>) (Connection obj) -> {
+        Utils.addValidaterCheck((Validater<Connection>) (Connection obj) -> {
             boolean b = false;
 
             try {
@@ -51,7 +52,7 @@ public class Database {
             return b;
         });
         
-        Utils.addNullCheckValidater((Validater<ResultSet>) (ResultSet obj) -> {
+        Utils.addValidaterCheck((Validater<ResultSet>) (ResultSet obj) -> {
             boolean b = false;
 
             try {
@@ -63,6 +64,9 @@ public class Database {
             return b;
         });
         
+        Utils.addValidaterCheck((Validater<Database>) (Database obj) -> {
+            return Utils.isValid(obj.getConnection());
+        });
     }
 
     @AllArgsConstructor
@@ -97,7 +101,7 @@ public class Database {
     private Connection connection;
 
     private Database(Type type) {
-        if (Utils.isNull(type.callerClass) || Utils.isNull(type.loadArgs)) {
+        if (Utils.isValid(type.callerClass) || Utils.isValid(type.loadArgs)) {
             throw new RuntimeException("Caller class cannot be null for DatabaseType");
         }
 
@@ -145,7 +149,7 @@ public class Database {
         
         this.connection = exe.execute();
 
-        if (Utils.isNull(this.connection)) {
+        if (Utils.isValid(this.connection)) {
             this.connection = DriverManager.getConnection(type.loadArgs);
         }
     }
@@ -425,7 +429,7 @@ public class Database {
         private final List<ResultSetIteratorEntry> data = Lists.newLinkedList();
         
         private SimpleResultSetIterator(ResultSet rs) {
-            if (Utils.isNull(rs)) {
+            if (Utils.isValid(rs)) {
                 throw new RuntimeException("ResultSet cannot be null or closed");
             }
             
@@ -514,6 +518,9 @@ public class Database {
                 throw new IllegalArgumentException("Database.GenericConnect() does not support Database.Type.OTHER");
         }
         
+        if (!Utils.isValid(db)) {
+            Log.severe("Unable to connect to database with specified values in the 'database_settings' config");
+        }
         
         return db;
     }
