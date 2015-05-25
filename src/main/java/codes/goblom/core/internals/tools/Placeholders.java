@@ -16,6 +16,8 @@ import com.google.common.collect.Maps;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.conversations.Conversable;
@@ -82,15 +84,11 @@ public class Placeholders {
         });
     }
     
-    static abstract class AbstractPlaceholder implements Placeholder {
+    @AllArgsConstructor
+    @RequiredArgsConstructor
+    public static abstract class AbstractPlaceholder implements Placeholder {
         final String key;
         boolean regex = false, requiresPlayer = false;
-        
-        AbstractPlaceholder(String key, boolean regex, boolean requires) {
-            this.key = key;
-            this.regex = regex;
-            this.requiresPlayer = requires;
-        }
         
         @Override
         public String getKey() { return key; }

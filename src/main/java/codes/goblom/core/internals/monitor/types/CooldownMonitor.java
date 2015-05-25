@@ -5,7 +5,11 @@
  */
 package codes.goblom.core.internals.monitor.types;
 
+import codes.goblom.core.GoPlugin;
+import codes.goblom.core.internals.ExecutorArgs;
 import codes.goblom.core.internals.monitor.Monitor;
+import codes.goblom.core.internals.tools.Placeholders;
+import codes.goblom.core.internals.tools.Placeholders.AbstractPlaceholder;
 import com.google.common.collect.Maps;
 import java.util.Map;
 import java.util.UUID;
@@ -19,11 +23,22 @@ import org.bukkit.entity.Player;
  * @author Goblom
  */
 public class CooldownMonitor extends Monitor {
-
     @Monitor.TickInterval private static final long TICK_INTERVAL = 20L;
     
     private Map<UUID, Counter> cooldowns = Maps.newConcurrentMap();
     public boolean mustBeOnline = false;
+    
+    CooldownMonitor() {
+        super();
+        
+        Placeholders.register(new AbstractPlaceholder("{cooldown:remaining}", false, true) {
+            
+            @Override
+            public Object execute(ExecutorArgs args) throws Throwable {                
+                return getRemaining(args.getAs(Player.class));
+            }
+        });
+    }
     
     public void add(Player player, int seconds) {
         if (seconds <= 0) {

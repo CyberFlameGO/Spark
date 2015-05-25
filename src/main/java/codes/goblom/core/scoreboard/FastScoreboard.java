@@ -47,7 +47,7 @@ public class FastScoreboard extends Monitor {
 //    }
     
     @Monitor.TickInterval
-    public static long UPDATE_INTERVAL = 10L;
+    private static long UPDATE_INTERVAL = 10L;
     
     private static final Map<String, OfflinePlayer> cache = Maps.newHashMap();
 
@@ -59,7 +59,7 @@ public class FastScoreboard extends Monitor {
     private final List<Integer> removed;
     private Set<String> updated;
 
-    FastScoreboard(String title) {
+    public FastScoreboard(String title) {
         checkNotNull(title);
         this.scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
         this.title = ChatColor.translateAlternateColorCodes('&', title);
@@ -70,7 +70,7 @@ public class FastScoreboard extends Monitor {
     }
 
     @Deprecated //Untested
-    FastScoreboard() {
+    public FastScoreboard() {
         this.scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
         this.main = scoreboard.getObjective(DisplaySlot.SIDEBAR);
         

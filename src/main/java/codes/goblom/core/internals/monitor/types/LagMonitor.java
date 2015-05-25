@@ -5,7 +5,11 @@
  */
 package codes.goblom.core.internals.monitor.types;
 
+import codes.goblom.core.internals.ExecutorArgs;
 import codes.goblom.core.internals.monitor.Monitor;
+import codes.goblom.core.internals.tools.Placeholders;
+import codes.goblom.core.internals.tools.Placeholders.AbstractPlaceholder;
+import codes.goblom.core.misc.utils.Utils;
 import com.google.common.collect.Lists;
 import java.text.DecimalFormat;
 import java.util.LinkedList;
@@ -27,6 +31,14 @@ public class LagMonitor extends Monitor {
         super();
         
         history.add(20.0);
+        
+        Placeholders.register(new AbstractPlaceholder("{tps}") {
+
+            @Override
+            public Object execute(ExecutorArgs args) throws Throwable {
+                return getAverage();
+            }
+        });
     }
     
     public double getAverage() {
