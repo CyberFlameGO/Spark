@@ -18,7 +18,7 @@ import org.bukkit.util.Vector;
 @AllArgsConstructor
 public class Vector3D implements Cloneable {
     
-    public static final Vector3D ORIGIN = new Vector3D(0, 0, 0);
+    public static final Vector3D ORIGIN = new ImmutableOriginVector3D();
     
     @Getter
     protected double x, y, z;
@@ -145,5 +145,17 @@ public class Vector3D implements Cloneable {
     @Override
     public String toString() {
         return String.format("Vector3D[x: %s, y: %s, z: %s]", x, y, z);
+    }
+    
+    static class ImmutableOriginVector3D extends Vector3D {
+        private ImmutableOriginVector3D() { super(0, 0, 0); }
+        @Override public Vector3D divide(double divisor) { return this; }
+        @Override public Vector3D divide(int divisor) { return this; }
+        @Override public Vector3D multiply(double factor) { return this; }
+        @Override public Vector3D multiply(int factor) { return this; }
+        @Override public Vector3D subtract(double x, double y, double z) { return this; }
+        @Override public Vector3D subtract(Vector3D other) { return this; }
+        @Override public Vector3D add(double x, double y, double z) { return this; }
+        @Override public Vector3D add(Vector3D other) { return this; }
     }
 }
