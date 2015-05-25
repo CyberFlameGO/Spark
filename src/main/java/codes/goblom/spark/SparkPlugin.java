@@ -60,11 +60,11 @@ public abstract class SparkPlugin extends JavaPlugin implements Spark {
     
     public void disable() { }
     
-    @Override
-    public final void onLoad() { load(); }
+    @Override // If you override this make sure to call super.onLoad()
+    public void onLoad() { load(); }
     
-    @Override
-    public final void onEnable() {
+    @Override // If you override this make sure to call super.onEnable()
+    public void onEnable() {
         Config core = Configs.CORE;
 
         // Load core config information
@@ -107,8 +107,8 @@ public abstract class SparkPlugin extends JavaPlugin implements Spark {
         enabled();
     }
     
-    @Override
-    public final void onDisable() { 
+    @Override // If you override this make sure to call super.onLoad()
+    public void onDisable() { 
 //        try {
             disable();
 //        } catch (Throwable t) {
