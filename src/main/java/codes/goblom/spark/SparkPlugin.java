@@ -12,12 +12,14 @@ import codes.goblom.spark.conversation.ConversationSequencer;
 import codes.goblom.spark.internals.task.AsyncTask;
 import codes.goblom.spark.internals.Callback;
 import codes.goblom.spark.internals.Spark;
+import codes.goblom.spark.internals.misc.SparkPluginsCommand;
 import codes.goblom.spark.internals.task.SyncTask;
 import codes.goblom.spark.internals.monitor.Monitors;
 import codes.goblom.spark.misc.tools.BukkitDevUpdater;
 import codes.goblom.spark.misc.tools.Metrics;
 import codes.goblom.spark.misc.tools.SpigotUpdater;
 import codes.goblom.spark.misc.utils.PlayerUtils;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import java.io.File;
 import java.util.Iterator;
@@ -47,6 +49,8 @@ public abstract class SparkPlugin extends JavaPlugin implements Spark {
         super();
         
         SparkPlugin.instance = this;
+        
+        ImmutableList.of("plugins", "pl").forEach((name) -> { new SparkPluginsCommand(name); });
     }
     
     public void load() { }

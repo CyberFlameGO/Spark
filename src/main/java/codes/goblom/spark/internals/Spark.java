@@ -10,8 +10,10 @@ import codes.goblom.spark.configuration.Config;
 import codes.goblom.spark.configuration.ConfigType;
 import codes.goblom.spark.internals.monitor.Monitor;
 import codes.goblom.spark.internals.monitor.Monitors;
+import codes.goblom.spark.reflection.safe.SafeField;
 import java.io.File;
 import org.bukkit.Bukkit;
+import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
@@ -53,5 +55,12 @@ public interface Spark {
     
     public static void register(Listener listener) {
         Bukkit.getServer().getPluginManager().registerEvents(listener, Spark.getInstance());
+    }
+    
+    public static SimpleCommandMap getCommandMap() {
+        SafeField<SimpleCommandMap> f = new SafeField(Bukkit.getServer().getClass(), "commandMap");
+                  f.setAccessible(true);
+        
+        return f.get(Bukkit.getServer());
     }
 }
