@@ -31,6 +31,8 @@ public abstract class Geometry<T> {
 
     public abstract List<T> generateCircle(T center, int radius, int height, boolean hollow, boolean sphere);
 
+    public abstract List<T> generateCuboid(T bound1, T bound2);
+    
     public abstract boolean isInBorder(T center, T check, int range);
     
     public final CircleBuilder newCircleBuilder(T center) {
@@ -119,6 +121,28 @@ public abstract class Geometry<T> {
             
             return !(x1 >= (x + range) || z1 >= (z + range) || x1 <= (x - range) || z1 <= (z - range));
         }
+
+        @Override
+        public List<Location> generateCuboid(Location bound1, Location bound2) {
+            List<Location> list = Lists.newArrayList();
+            
+            final int minx = Math.min(bound1.getBlockX(), bound2.getBlockX());
+            final int miny = Math.min(bound1.getBlockY(), bound2.getBlockY());
+            final int minz = Math.min(bound1.getBlockZ(), bound2.getBlockZ());
+            final int maxx = Math.max(bound1.getBlockX(), bound2.getBlockX());
+            final int maxy = Math.max(bound1.getBlockY(), bound2.getBlockY());
+            final int maxz = Math.max(bound1.getBlockZ(), bound2.getBlockZ());
+            
+            for (int x = minx; x <= maxx; ++x) {
+                for (int y = miny; y <= maxy; ++y) {
+                    for (int z = minz; z <= maxz; ++z) {
+                        list.add(new Location(bound1.getWorld(), x, y, z));
+                    }
+                }
+            }
+            
+            return list;
+        }
     }
 
     static class VectorGeometry extends Geometry<Vector3D> {
@@ -167,5 +191,28 @@ public abstract class Geometry<T> {
             
             return !(x1 >= (x + range) || z1 >= (z + range) || x1 <= (x - range) || z1 <= (z - range));
         }
+        
+        @Override
+        public List<Vector3D> generateCuboid(Vector3D bound1, Vector3D bound2) {
+            List<Vector3D> list = Lists.newArrayList();
+            
+            final double minx = Math.min(bound1.getX(), bound2.getX());
+            final double miny = Math.min(bound1.getY(), bound2.getY());
+            final double minz = Math.min(bound1.getZ(), bound2.getZ());
+            final double maxx = Math.max(bound1.getX(), bound2.getX());
+            final double maxy = Math.max(bound1.getY(), bound2.getY());
+            final double maxz = Math.max(bound1.getZ(), bound2.getZ());
+            
+            for (double x = minx; x <= maxx; ++x) {
+                for (double y = miny; y <= maxy; ++y) {
+                    for (double z = minz; z <= maxz; ++z) {
+                        list.add(new Vector3D(x, y, z));
+                    }
+                }
+            }
+            
+            return list;
+        }
+        
     }
 }
