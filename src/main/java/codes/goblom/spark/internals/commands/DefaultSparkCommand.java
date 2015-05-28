@@ -103,34 +103,7 @@ public final class DefaultSparkCommand extends Command {
                 }
             }
             
-            if (!cmd.runAsync()) {
-                try {
-                    return executeAndReturn(cmd, ExecutorArgs.wrap(sender, prepare(1, args)));
-                } catch (Throwable t) {
-                    if (cmd.canSendError()) {
-                        Log.sendErrorMessage(sender, t.getMessage());
-                        t.printStackTrace();
-                    }
-                }
-            } else {
-                new AsyncTask<Boolean>(new Callback<Boolean>() {
-
-                    @Override
-                    public void onFinish(Boolean object, Throwable error) {
-                        if (error != null && cmd.canSendError()) {
-                            Log.sendErrorMessage(sender, error.getMessage());
-                            error.printStackTrace();
-                        }
-                    }
-                }) {
-
-                    @Override
-                    public Boolean execute() throws Throwable {
-                        return executeAndReturn(cmd, ExecutorArgs.wrap(sender, prepare(1, args)));
-                    }
-                    
-                }.run();
-            }
+            return execute(cmd, sender, args);
         } else {
             //TODO: Finish help pages
             Log.sendErrorMessage(sender, "No Help pages yet.");
@@ -139,8 +112,39 @@ public final class DefaultSparkCommand extends Command {
         return true;
     }
     
-    public boolean executeAndReturn(SparkCommand cmd, ExecutorArgs args) throws Throwable {
-        return cmd.execute(args);
+    public boolean execute(SparkCommand cmd, CommandSender sender, String[] args) {
+        if (cmd.runAsync()) {
+            new AsyncTask<Boolean>(new Callback<Boolean>() {
+
+                @Override
+                public void onFinish(Boolean object, Throwable error) {
+                    if (error != null && cmd.canSendError()) {
+                        Log.sendErrorMessage(sender, error.getMessage());
+                        error.printStackTrace();
+                    }
+                }
+            }) {
+
+                @Override
+                public Boolean execute() throws Throwable {
+                    return cmd.execute(ExecutorArgs.wrap(sender, prepare(1, args)));
+                }
+
+            }.run();
+            
+            return true;
+        }
+        
+        try {
+            return cmd.execute(ExecutorArgs.wrap(sender, prepare(1, args)));
+        } catch (Throwable t) {
+            if (cmd.canSendError()) {
+                Log.sendErrorMessage(sender, t.getMessage());
+                t.printStackTrace();
+            }
+        }
+        
+        return false;
     }
     
     String[] prepare(int startAt, String[] args) {

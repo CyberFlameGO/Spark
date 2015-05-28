@@ -45,7 +45,7 @@ public interface SparkCommand extends Executor<Boolean, Throwable> {
         }
         
         if (command.isMainCommand()) {
-            return DefaultSparkCommand.registerMain(command);
+            return DefaultSparkCommand.registerAsMain(command);
         }
         
         boolean registered = false;
