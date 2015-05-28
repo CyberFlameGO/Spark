@@ -25,7 +25,7 @@ public class Utils {
     private static final List<Validater> VALID_CHECK =  Lists.newLinkedList();
     
     static {
-        VALID_CHECK.add((Validater<String>) (String obj) -> obj.equals(""));
+        VALID_CHECK.add((Validater<String>) (String obj) -> !obj.isEmpty());
         VALID_CHECK.add((Validater<String[]>) (String[] obj) -> obj.length != 0);
         VALID_CHECK.add((Validater<Object[]>) (Object[] obj) -> obj.length != 0);
     }
@@ -84,6 +84,7 @@ public class Utils {
             Validater v = it.next();
             
             try {
+                System.out.println("Validating: " + o);
                 is = v.validate(o);
             } catch (Exception e) { }
         }
