@@ -5,7 +5,6 @@
  */
 package codes.goblom.spark.misc.utils;
 
-import codes.goblom.spark.SparkPlugin;
 import codes.goblom.spark.reflection.safe.SafeClass;
 import codes.goblom.spark.reflection.safe.SafeField;
 import codes.goblom.spark.reflection.safe.SafeObject;
@@ -13,8 +12,8 @@ import codes.goblom.spark.reflection.Reflection;
 import codes.goblom.spark.reflection.safe.SafeConstructor;
 import codes.goblom.spark.reflection.safe.SafeMethod;
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permissible;
 
 /**
  *
@@ -24,7 +23,7 @@ public class PlayerUtils {
     
     private PlayerUtils() { }
     
-    public static boolean hasPermission(CommandSender sender, String permission) {
+    public static boolean hasPermission(Permissible sender, String permission) {
         return sender.isOp() || sender.hasPermission(permission);
     }
     

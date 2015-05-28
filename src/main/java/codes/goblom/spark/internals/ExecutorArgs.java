@@ -94,13 +94,17 @@ public class ExecutorArgs implements Iterable<Object> {
                 return new ExecutorArgs(EMPTY_OBJECT_ARRAY);
             }
             
-            Object[] args = new Object[slot >= 2 ? slot - 1 : slot]; // We dont want the array size to be zero at any time
+//            int size = slot >= 2 ? slot - 1 : slot; // We dont want the array size to be zero at any time
+//            System.out.println(size);
+//            
+//            Object[] args = new Object[size]; 
+//            
+//            map.entrySet().forEach((entry) -> {
+//                System.out.println(String.format("args[%s] = %s", entry.getKey(), entry.getValue()));
+//                args[entry.getKey()] = entry.getValue();
+//            });
             
-            map.entrySet().forEach((entry) -> {
-                args[entry.getKey()] = entry.getValue();
-            });
-            
-            return new ExecutorArgs(args);
+            return new ExecutorArgs(map.values().toArray());
         }
     }
     

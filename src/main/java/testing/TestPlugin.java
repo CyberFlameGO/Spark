@@ -8,6 +8,7 @@ package testing;
 import codes.goblom.spark.Configs;
 import codes.goblom.spark.SparkPlugin;
 import codes.goblom.spark.Log;
+import codes.goblom.spark.internals.commands.SparkCommand;
 import java.util.Arrays;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -31,20 +32,11 @@ public class TestPlugin extends SparkPlugin {
     
     @Override
     public void enabled() {
-//        new SyncTask<Void>() {
-//
-//            @Override
-//            public Void execute() throws Throwable {
-//                LagMonitor lm = getMonitor(LagMonitor.class);
-//                final Runtime r = Runtime.getRuntime();
-//                
-//                // 1048576L == 1MiB
-//                message("&7Current TPS: &a" + lm.getAverage());
-//                message("&7Memory usage: &a" + Utils.addCommas((r.totalMemory() - r.freeMemory()) / 1048576L) + "&8/&a" + Utils.addCommas(r.totalMemory() / 1048576L) + " &7of maximum &b" + Utils.addCommas(r.maxMemory() / 1048576L));
-//                return null;
-//            }
-//            
-//        }.runTimer(0, 20 * 3);
+        if (!SparkCommand.registerCommand(new TestCommand())) {
+            Log.info("Unable to register TestCommand");
+        } else {
+            Log.info("Registered TestCommand");
+        }
     }
     
     public static void message(String str) {

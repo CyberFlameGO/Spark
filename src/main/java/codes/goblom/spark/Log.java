@@ -6,6 +6,8 @@
 package codes.goblom.spark;
 
 import codes.goblom.spark.internals.Spark;
+import codes.goblom.spark.internals.tools.Placeholders;
+import org.bukkit.command.CommandSender;
 
 /**
  *
@@ -40,8 +42,14 @@ public class Log {
     }
     
     public static void debug(String message, Object... vals) {
-        if (Configs.CORE.get("log.debug", false)) {
+        if (Spark.DEBUG) {
             info("[Debug] " + message, vals);
         }
+    }
+    
+    public static void sendErrorMessage(CommandSender sender, String message, Object... vals) {
+        String msg = "&cError: " + (vals != null && vals.length != 0 ? String.format(message, vals) : message);
+        
+        sender.sendMessage(Placeholders.parse(msg, sender));
     }
 }

@@ -5,26 +5,20 @@
  */
 package codes.goblom.spark.internals.misc;
 
+import codes.goblom.spark.Log;
 import codes.goblom.spark.SparkPlugin;
-import codes.goblom.spark.internals.Spark;
-import codes.goblom.spark.reflection.safe.SafeField;
 import com.google.common.collect.Lists;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.SimpleCommandMap;
-import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.plugin.Plugin;
 
 /**
  *
  * @author Goblom
  */
-public class SparkPluginsCommand extends BukkitCommand {
+public class SparkPluginsCommand extends BukkitCommandOverride {
 
     public SparkPluginsCommand(String name) {
         super(name);
@@ -32,23 +26,7 @@ public class SparkPluginsCommand extends BukkitCommand {
         this.usageMessage = "/plugins";
         this.setPermission("bukkit.command.plugins");
         
-        register(name);
-    }
-    
-    void register(String name) {
-        SimpleCommandMap commandMap = Spark.getCommandMap();
-        SafeField<Map<String, Command>> field = new SafeField(commandMap.getClass(), "knownCommands");
-                                        field.setAccessible(true);
-                                        field.setReadOnly(false);
-        Map<String, Command> knownCommands = field.get(commandMap);
-            
-        knownCommands.put("bukkit:" + name, this);
-        knownCommands.put(name, this);
-        knownCommands.put("spark:" + name, this);
-        
-        SafeField f = new SafeField(getClass(), "commandMap");
-                  f.setAccessible(true);
-                  f.set(this, commandMap);
+        register();
     }
     
     @Override
@@ -60,7 +38,7 @@ public class SparkPluginsCommand extends BukkitCommand {
         
         sender.sendMessage(data.pluginList);
         
-        if (!spark.isEmpty()) {
+        if (!spark.isEmpty() && !data.sparkPlugins.isEmpty()) {
             sender.sendMessage(spark);
         }
         
@@ -87,7 +65,7 @@ public class SparkPluginsCommand extends BukkitCommand {
             pluginList.append(plugin.getDescription().getName());
         }
 
-        data.pluginList = "Plugins (" + plugins.length + "): " + pluginList.toString();
+        data.pluginList = String.format("Plugins (%s): %s", plugins.length, pluginList.toString());
         
         return data;
     }

@@ -5,6 +5,7 @@
  */
 package codes.goblom.spark.internals;
 
+import codes.goblom.spark.Configs;
 import codes.goblom.spark.SparkPlugin;
 import codes.goblom.spark.configuration.Config;
 import codes.goblom.spark.configuration.ConfigType;
@@ -24,6 +25,8 @@ import org.bukkit.event.Listener;
  * @author Goblom
  */
 public interface Spark {
+    
+    public static final boolean DEBUG = Configs.CORE.get("log.debug", false);
     
     public static <T extends SparkPlugin> T getInstance() {
         return (T) SparkPlugin.getInstance();

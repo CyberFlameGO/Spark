@@ -12,6 +12,7 @@ import codes.goblom.spark.conversation.ConversationSequencer;
 import codes.goblom.spark.internals.task.AsyncTask;
 import codes.goblom.spark.internals.Callback;
 import codes.goblom.spark.internals.Spark;
+import codes.goblom.spark.internals.commands.DefaultSparkCommand;
 import codes.goblom.spark.internals.misc.SparkPluginsCommand;
 import codes.goblom.spark.internals.task.SyncTask;
 import codes.goblom.spark.internals.monitor.Monitors;
@@ -51,6 +52,7 @@ public abstract class SparkPlugin extends JavaPlugin implements Spark {
         SparkPlugin.instance = this;
         
         ImmutableList.of("plugins", "pl").forEach((name) -> { new SparkPluginsCommand(name); });
+        ImmutableList.of("spark", "spk", "sk").forEach((name) -> { new DefaultSparkCommand(name); });
     }
     
     public void load() { }
