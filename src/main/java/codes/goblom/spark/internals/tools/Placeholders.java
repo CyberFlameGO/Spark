@@ -5,7 +5,6 @@
  */
 package codes.goblom.spark.internals.tools;
 
-import codes.goblom.spark.SparkPlugin;
 import codes.goblom.spark.Log;
 import codes.goblom.spark.internals.Executor;
 import codes.goblom.spark.internals.ExecutorArgs;
@@ -21,6 +20,7 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.conversations.Conversable;
 import org.bukkit.entity.Player;
 
@@ -133,6 +133,10 @@ public class Placeholders {
         return parse(msg, convo instanceof Player ? (Player) convo : null);
     }
     
+    public static String parse(String msg, CommandSender sender) {
+        return parse(msg, sender instanceof Player ? (Player) sender : null);
+    }
+    
     public static String parse(String msg, Player player) {
         for (Placeholder p : placeholders.values()) {
             if (p.requiresPlayer() && player == null) {
@@ -152,14 +156,14 @@ public class Placeholders {
                 
                 try {
                     if (matcher.matches()) {
-                        msg = matcher.replaceAll(p.execute(ExecutorArgs.Builder().put(player).build()).toString());
+                        msg = matcher.replaceAll(p.execute(ExecutorArgs.wrap(player)).toString());
                     }
                 } catch (Throwable t) {
                     t.printStackTrace();
                 }
             } else {
                 try {
-                    msg = msg.replace(p.getKey(), p.execute(ExecutorArgs.Builder().put(player).build()).toString());
+                    msg = msg.replace(p.getKey(), p.execute(ExecutorArgs.wrap(player)).toString());
                 } catch (Throwable e) {
                     e.printStackTrace();
                 }

@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor( access = AccessLevel.PROTECTED )
 public class ExecutorArgs implements Iterable<Object> {
 
-    protected static final Object[] EMPTY_OBJECT_ARRAY = { };
+    protected static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
     
     protected final Object[] objects;
 
@@ -54,7 +54,7 @@ public class ExecutorArgs implements Iterable<Object> {
         return type.isAssignableFrom(get(i).getClass());
     }
     
-    public static Builder Builder() {
+    protected static Builder Builder() {
         return new Builder();
     }
 
@@ -63,7 +63,21 @@ public class ExecutorArgs implements Iterable<Object> {
         return new ExecutorArgsIterator(this);
     }
     
-    public static class Builder {
+    public static ExecutorArgs wrap(Object... args) {
+        if (args == null || args.length == 0) {
+            return Executor.EMPTY_ARGS;
+        }
+        
+        Builder builder = Builder();
+        
+        for (Object arg : args) {
+            builder.put(arg);
+        }
+        
+        return builder.build();
+    }
+    
+    protected static class Builder {
         private final Map<Integer, Object> map = Maps.newConcurrentMap();
         private int slot = 0;
         
