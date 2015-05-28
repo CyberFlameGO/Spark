@@ -78,7 +78,7 @@ public class ExecutorArgs implements Iterable<Object> {
     }
     
     protected static class Builder {
-        private final Map<Integer, Object> map = Maps.newConcurrentMap();
+        private final Map<Integer, Object> map = Maps.newHashMap();
         private int slot = 0;
         
         private Builder() { }
@@ -94,7 +94,7 @@ public class ExecutorArgs implements Iterable<Object> {
                 return new ExecutorArgs(EMPTY_OBJECT_ARRAY);
             }
             
-            Object[] args = new Object[slot - 1];
+            Object[] args = new Object[slot >= 2 ? slot - 1 : slot]; // We dont want the array size to be zero at any time
             
             map.entrySet().forEach((entry) -> {
                 args[entry.getKey()] = entry.getValue();
