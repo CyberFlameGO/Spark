@@ -1,0 +1,4 @@
+main: codes.goblom.spark.SparkInstance
+version: Alpha
+name: Spark
+author: Goblom

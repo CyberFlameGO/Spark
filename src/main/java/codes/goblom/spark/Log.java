@@ -42,7 +42,7 @@ public class Log {
     }
     
     public static void debug(String message, Object... vals) {
-        if (Spark.DEBUG) {
+        if (Spark.isDebug()) {
             info("[Debug] " + message, vals);
         }
     }

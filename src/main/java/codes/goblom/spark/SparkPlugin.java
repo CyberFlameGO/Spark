@@ -50,9 +50,6 @@ public abstract class SparkPlugin extends JavaPlugin implements Spark {
         super();
         
         SparkPlugin.instance = this;
-        
-        ImmutableList.of("plugins", "pl").forEach((name) -> { new SparkPluginsCommand(name); });
-        ImmutableList.of("spark", "spk", "sk").forEach((name) -> { new DefaultSparkCommand(name); });
     }
     
     public void load() { }

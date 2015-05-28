@@ -5,7 +5,6 @@
  */
 package codes.goblom.spark.internals.misc;
 
-import codes.goblom.spark.Log;
 import codes.goblom.spark.SparkPlugin;
 import com.google.common.collect.Lists;
 import java.util.List;

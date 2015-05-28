@@ -26,7 +26,9 @@ import org.bukkit.event.Listener;
  */
 public interface Spark {
     
-    public static final boolean DEBUG = Configs.CORE.get("log.debug", false);
+    public static boolean isDebug() {
+        return Configs.CORE.get("log.debug", false);
+    }
     
     public static <T extends SparkPlugin> T getInstance() {
         return (T) SparkPlugin.getInstance();
