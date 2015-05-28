@@ -30,10 +30,13 @@ import org.bukkit.entity.Player;
  */
 public class Placeholders {
     
+    private static final Map<String, Placeholder> placeholders = Maps.newConcurrentMap();
+    private static final Map<String, Pattern> patterns = Maps.newConcurrentMap();
+    
     // TODO: Add more
     static {
         Utils.addValidaterCheck((Validater<Placeholder>) (placeholder) -> {
-            return Utils.isValid(placeholder.getKey());
+            return placeholder.getKey() != null && !placeholder.getKey().isEmpty();
         });
         
         register(new AbstractPlaceholder("{player:name}", false, true) {
@@ -99,12 +102,14 @@ public class Placeholders {
         
         @Override
         public boolean requiresPlayer() { return requiresPlayer; }
+        
+        @Override
+        public String toString() {
+            return String.format("AbstractPlaceholder[key:%s, regex:%s, player:%s]", getKey(), isRegex(), requiresPlayer());
+        }
     }
     
     private Placeholders() { }
-    
-    private static Map<String, Placeholder> placeholders = Maps.newConcurrentMap();
-    private static Map<String, Pattern> patterns = Maps.newConcurrentMap();
     
     public static boolean register(Placeholder placeholder) {
         if (!Utils.isValid(placeholder)) {
@@ -138,7 +143,7 @@ public class Placeholders {
     }
     
     public static String parse(String msg, Player player) {
-        for (Placeholder p : placeholders.values()) {
+        for (Placeholder p : placeholders.values()) {            
             if (p.requiresPlayer() && player == null) {
                 continue;
             }
