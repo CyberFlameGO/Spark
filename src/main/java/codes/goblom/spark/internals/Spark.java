@@ -36,9 +36,9 @@ public interface Spark extends Plugin {
     
     public static Spark getMainInstance() {
         StackTraceElement[] element = Thread.currentThread().getStackTrace();
-        for (int i = 0; i < element.length; i++) {
-            System.out.println(String.format("[%s] --> %s", i, element[i].getClassName()));
-        }
+//        for (int i = 0; i < element.length; i++) {
+//            System.out.println(String.format("[%s] --> %s", i, element[i].getClassName()));
+//        }
         
         Class clazz = new SafeClass(element[1].getClassName()).unsafe2();
         try {
