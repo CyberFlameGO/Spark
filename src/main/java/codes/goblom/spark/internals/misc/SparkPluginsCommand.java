@@ -50,7 +50,7 @@ public class SparkPluginsCommand extends BukkitCommandOverride {
         Plugin[] plugins = Bukkit.getPluginManager().getPlugins();
 
         for (Plugin plugin : plugins) {
-            if (plugin instanceof SparkPlugin) {
+            if (plugin instanceof SparkPlugin && !plugin.getName().equals("Spark")) {
                 data.sparkPlugins.add((SparkPlugin) plugin);
                 continue;
             }
