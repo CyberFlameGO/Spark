@@ -111,7 +111,6 @@ public class Vector3D implements Cloneable {
         return this;
     }
  
-    
     public Vector3D divide(double divisor) {
         if (divisor == 0) {
             throw new IllegalArgumentException("Cannot divide by 0.");

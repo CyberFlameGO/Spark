@@ -1,11 +1,14 @@
 package codes.goblom.spark.conversation;
 
+import codes.goblom.spark.SparkPlugin;
+import codes.goblom.spark.misc.utils.Utils;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.bukkit.conversations.Conversable;
+import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  *
@@ -32,8 +35,12 @@ public class ConversationApi {
         return prepare(convo, allowConsole, array);
     }
     
-    public static ConversationSequencer prepare(Conversable convo, boolean allowConsole, ConversationStep[] steps) { 
-        ConversationSequencerImpl sequence = new ConversationSequencerImpl(convo, allowConsole, steps);
+    public static ConversationSequencer prepare(Conversable convo, boolean allowConsole, ConversationStep[] steps) {
+        if (!Utils.isValid(steps)) {
+            throw new UnsupportedOperationException("Steps canno have zero entries");
+        }
+        
+        ConversationSequencerImpl sequence = new ConversationSequencerImpl(JavaPlugin.getProvidingPlugin(steps[0].getClass()), convo, allowConsole, steps);
         
         conversations.put(convo, sequence);
         

@@ -12,21 +12,17 @@ import codes.goblom.spark.conversation.ConversationSequencer;
 import codes.goblom.spark.internals.task.AsyncTask;
 import codes.goblom.spark.internals.Callback;
 import codes.goblom.spark.internals.Spark;
-import codes.goblom.spark.internals.commands.DefaultSparkCommand;
-import codes.goblom.spark.internals.misc.SparkPluginsCommand;
-import codes.goblom.spark.internals.task.SyncTask;
 import codes.goblom.spark.internals.monitor.Monitors;
+import codes.goblom.spark.internals.task.SyncTask;
 import codes.goblom.spark.misc.tools.BukkitDevUpdater;
 import codes.goblom.spark.misc.tools.Metrics;
 import codes.goblom.spark.misc.tools.SpigotUpdater;
 import codes.goblom.spark.misc.utils.PlayerUtils;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import java.io.File;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
-import lombok.Getter;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.conversations.Conversable;
@@ -43,13 +39,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 public abstract class SparkPlugin extends JavaPlugin implements Spark {
     private final Map<String, Config> configs = Maps.newConcurrentMap();
     
-    @Getter
-    private static SparkPlugin instance;
-    
     public SparkPlugin() {
         super();
         
-        SparkPlugin.instance = this;
+//        SparkInstance.INSTANCES.put(getClass(), this);
     }
     
     public void load() { }
@@ -64,11 +57,11 @@ public abstract class SparkPlugin extends JavaPlugin implements Spark {
     public void disable() { }
     
     @Override // If you override this make sure to call super.onLoad()
-    public void onLoad() { load(); }
+    public final void onLoad() { load(); }
     
     @Override // If you override this make sure to call super.onEnable()
-    public void onEnable() {
-        Config core = Configs.CORE;
+    public final void onEnable() {
+        Config core = getConfig("core");
 
         // Load core config information
         if (!core.contains("enable-metrics")) core.set("enable-metrics", true, true);
@@ -83,9 +76,9 @@ public abstract class SparkPlugin extends JavaPlugin implements Spark {
         if (core.get("enable-metrics", true)) {
             new AsyncTask<Metrics>((Metrics object, Throwable error) -> {
                 if (error == null) {
-                    Log.info("Metrics started successfully.");
+                    Log.find(this).info("Metrics started successfully.");
                 } else {
-                    Log.warning("Metrics was unable to start. Error: %s", error.getMessage());
+                    Log.find(this).warning("Metrics was unable to start. Error: %s", error.getMessage());
                 }
             }) {
                 @Override
@@ -111,7 +104,7 @@ public abstract class SparkPlugin extends JavaPlugin implements Spark {
     }
     
     @Override // If you override this make sure to call super.onLoad()
-    public void onDisable() { 
+    public final void onDisable() { 
 //        try {
             disable();
 //        } catch (Throwable t) {
@@ -128,17 +121,17 @@ public abstract class SparkPlugin extends JavaPlugin implements Spark {
     
     @Override
     public final void reloadConfig() {
-        Configs.DEFAULT.reload();
+        MainSparkConfigs.DEFAULT.reload();
     }
     
     @Override
     public final void saveConfig() {
-        Configs.DEFAULT.save();
+        MainSparkConfigs.DEFAULT.save();
     }
     
     @Override
     public final FileConfiguration getConfig() {
-        return Configs.DEFAULT.getConfiguration();
+        return MainSparkConfigs.DEFAULT.getConfiguration();
     }
     
     @Override
@@ -176,14 +169,18 @@ public abstract class SparkPlugin extends JavaPlugin implements Spark {
      * @deprecated Very silly. Please instantiate SpigotUpdater yourself
      */
     @Deprecated
-    protected final void runSpigotUpdater(int projectId, Callback<String> callback) {
-        if (Configs.CORE.get("auto-update.check", true)) {
-            SpigotUpdater.check(projectId, callback);
+    protected void runSpigotUpdater(int projectId, Callback<String> callback) {
+        if (getConfig("core").get("auto-update.check", true)) {
+            SpigotUpdater.check(this, projectId, callback);
         }
     }
     
-    protected final void runBukkitDevUpdater(int projectId) {
-        if (Configs.CORE.get("auto-update.check", true)) {
+    /**
+     * @deprecated Very silly. Please instantiate BukkitDevUpdater yourself
+     */
+    @Deprecated
+    protected void runBukkitDevUpdater(int projectId) {
+        if (getConfig("core").get("auto-update.check", true)) {
             new AsyncTask<BukkitDevUpdater>((final BukkitDevUpdater updater, Throwable error) -> {
                 if (error != null) {
                     final Listener listener = new Listener() {
@@ -191,8 +188,8 @@ public abstract class SparkPlugin extends JavaPlugin implements Spark {
                         public void onPlayerJoin(PlayerJoinEvent event) {
                             Player player = event.getPlayer();
                             
-                            if (PlayerUtils.hasPermission(player, Spark.getInstance().getName() + ".updater.notify")) {
-                                player.sendMessage(String.format("%s[%s%s%s] " + ChatColor.GREEN + "%s", ChatColor.DARK_GRAY, ChatColor.AQUA, Spark.getInstance().getName(), ChatColor.DARK_GRAY, "An update is available to download. Download @ " + updater.getLatestFileLink()));
+                            if (PlayerUtils.hasPermission(player, SparkPlugin.this.getName() + ".updater.notify")) {
+                                player.sendMessage(String.format("%s[%s%s%s] " + ChatColor.GREEN + "%s", ChatColor.DARK_GRAY, ChatColor.AQUA, SparkPlugin.this.getName(), ChatColor.DARK_GRAY, "An update is available to download. Download @ " + updater.getLatestFileLink()));
                             }
                         }
                     };
@@ -200,7 +197,7 @@ public abstract class SparkPlugin extends JavaPlugin implements Spark {
                     new SyncTask<Void>() {
                         @Override
                         public Void execute() throws Throwable {
-                            if (Configs.CORE.get("auto-update.notify", true)) {
+                            if (MainSparkConfigs.CORE.get("auto-update.notify", true)) {
                                 Spark.register(listener);
                             }
                             
@@ -208,19 +205,19 @@ public abstract class SparkPlugin extends JavaPlugin implements Spark {
                         }
                     }.run();
                 } else {
-                    Log.warning("Unable to load bukkit plugin updater. :(");
+                    Log.find(this).warning("Unable to load bukkit plugin updater. :(");
                 }
             }) {
                 @Override
                 public BukkitDevUpdater execute() throws Throwable {
-                    boolean download = Configs.CORE.get("auto-update.download", true);
+                    boolean download = MainSparkConfigs.CORE.get("auto-update.download", true);
                     BukkitDevUpdater.UpdateType type = BukkitDevUpdater.UpdateType.NO_DOWNLOAD;
                     
                     if (download) {
                         type = BukkitDevUpdater.UpdateType.DEFAULT;
                     }
                     
-                    return new BukkitDevUpdater(Spark.getInstance(), projectId, Spark.getInstance().getFile(), type, true);
+                    return new BukkitDevUpdater(SparkPlugin.this, projectId, SparkPlugin.this.getFile(), type, true);
                 }
             }.run();
         }

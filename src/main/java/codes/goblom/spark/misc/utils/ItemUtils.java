@@ -74,8 +74,7 @@ public class ItemUtils {
         PropertyMap propertyMap = profile.getProperties();
         
         if (propertyMap == null) {
-            Log.severe("Profile doesn't contain a property map, using default player head skull");
-            return new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+            throw new Error("Profile doesn't contain a property map. Tweet @DevGoblom if you get this error");
         }
         
         byte[] data = BASE64.encode(String.format("{textures:{SKIN:{url:\"%s\"}}}", url).getBytes());

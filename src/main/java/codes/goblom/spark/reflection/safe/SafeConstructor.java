@@ -43,7 +43,7 @@ public class SafeConstructor implements Safe<Constructor<?>> {
         
         if (con == null) {
 //            throw new RuntimeException(String.format("Cound not find Constructor for class %s with params %s", clazz.getSimpleName(), Arrays.asList(params).toString()));
-            Log.severe("Cound not find Constructor for class %s with safeparams %s", clazz.getSimpleName(), Arrays.asList(params).toString());
+            Log.getMain().severe("Cound not find Constructor for class %s with safeparams %s", clazz.getSimpleName(), Arrays.asList(params).toString());
         }
         
         this.params = params.length;
@@ -65,7 +65,7 @@ public class SafeConstructor implements Safe<Constructor<?>> {
         
         if (con == null) {
 //            throw new RuntimeException(String.format("Cound not find Constructor for class %s with params %s", clazz.getSimpleName(), Arrays.asList(params).toString()));
-            Log.severe("Cound not find Constructor for class %s with params %s", clazz.getSimpleName(), Arrays.asList(params).toString());
+            Log.getMain().severe("Cound not find Constructor for class %s with params %s", clazz.getSimpleName(), Arrays.asList(params).toString());
         }
         
         this.params = params.length;
@@ -74,7 +74,7 @@ public class SafeConstructor implements Safe<Constructor<?>> {
     
     public SafeObject newInstance(Object... initargs) {
         if (params != Integer.MIN_VALUE && initargs.length != params) {
-            Log.warning("Entered params for Constructor on class % do not match length of %s", unsafe().getClass().getSimpleName(), params);
+            Log.getMain().warning("Entered params for Constructor on class % do not match length of %s", unsafe().getClass().getSimpleName(), params);
         }
         
         try {

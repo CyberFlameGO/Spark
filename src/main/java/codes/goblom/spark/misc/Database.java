@@ -6,6 +6,7 @@
 package codes.goblom.spark.misc;
 
 import codes.goblom.spark.Log;
+import codes.goblom.spark.SparkPlugin;
 import codes.goblom.spark.configuration.Config;
 import codes.goblom.spark.internals.Callback;
 import codes.goblom.spark.internals.ExecutorNoArgs;
@@ -101,7 +102,7 @@ public class Database {
     private Connection connection;
 
     private Database(Type type) {
-        if (Utils.isValid(type.callerClass) || Utils.isValid(type.loadArgs)) {
+        if (!Utils.isValid(type.callerClass) || !Utils.isValid(type.loadArgs)) {
             throw new RuntimeException("Caller class cannot be null for DatabaseType");
         }
 
@@ -149,7 +150,7 @@ public class Database {
         
         this.connection = exe.execute();
 
-        if (Utils.isValid(this.connection)) {
+        if (!Utils.isValid(this.connection)) {
             this.connection = DriverManager.getConnection(type.loadArgs);
         }
     }
@@ -493,10 +494,10 @@ public class Database {
      * 
      * @throws java.sql.SQLException if there was an error connecting to the database
      */
-    public static Database GenericConnect() throws SQLException {
-        Config cfg = Spark.getInstance().getConfig("database_settings");
+    public static Database GenericConnect(SparkPlugin plugin) throws SQLException {
+        Config cfg = plugin.getConfig("database");
         
-        Type type = Type.valueOf(cfg.get("type", Type.MySQL.name()));
+        Type type = Type.valueOf(cfg.get("type", Type.SQLite.name()));
         Database db = null;
         
         switch (type) {
@@ -519,7 +520,7 @@ public class Database {
         }
         
         if (!Utils.isValid(db)) {
-            Log.severe("Unable to connect to database with specified values in the 'database_settings' config");
+            Log.find(plugin).severe("Unable to connect to database with specified values in the 'database' config");
         }
         
         return db;

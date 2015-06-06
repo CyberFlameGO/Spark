@@ -30,7 +30,7 @@ public class SafeField<R> implements Safe<Field> {
         }
         
         if (field == null) {
-            Log.severe("Class [%s] does does not have a superclass that has field [%s]", coreClass.getSimpleName(), fieldName);
+            Log.getMain().severe("Class [%s] does does not have a superclass that has field [%s]", coreClass.getSimpleName(), fieldName);
         }
         
         this.unsafe = field;

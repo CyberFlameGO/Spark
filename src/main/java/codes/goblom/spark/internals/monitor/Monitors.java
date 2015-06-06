@@ -6,9 +6,11 @@
 package codes.goblom.spark.internals.monitor;
 
 import codes.goblom.spark.internals.policy.LoadPolicy;
-import codes.goblom.spark.SparkPlugin;
 import codes.goblom.spark.Log;
+import codes.goblom.spark.SparkInstance;
 import codes.goblom.spark.internals.Spark;
+import codes.goblom.spark.internals.commands.SparkCommand;
+import codes.goblom.spark.internals.commands.defaults.MonitorCommand;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import java.lang.reflect.Constructor;
@@ -32,6 +34,10 @@ import org.reflections.Reflections;
  */
 public class Monitors /*implements Iterable<Monitor>*/ {
 
+    static {
+        SparkCommand.registerCommand(new MonitorCommand());
+    }
+    
     private static final Reflections reflections = new Reflections("codes.goblom.core.internals.monitors.types");
 
     private static final Map<Class<? extends Monitor>, LoadPolicy> POLICIES = Maps.newConcurrentMap();
@@ -78,7 +84,7 @@ public class Monitors /*implements Iterable<Monitor>*/ {
         if (policy.isValid()) {
             POLICIES.put(policy.forClass, policy);
         } else {
-            Log.warning("Monitor Policy for %s is invalid.", policy.forClass.getSimpleName());
+            Log.getMain().warning("Monitor Policy for %s is invalid.", policy.forClass.getSimpleName());
         }
     }
 
@@ -136,7 +142,7 @@ public class Monitors /*implements Iterable<Monitor>*/ {
                             tickDelay = (Long) f.get(null);
                         }
                     } else {
-                        Log.debug("Found static field[%s] with type of [%s] for Monitor [%s]", f.getName(), f.getType().getSimpleName(), m.getName());
+                        Log.find(m.getOwningPlugin()).debug("Found static field[%s] with type of [%s] for Monitor [%s]", f.getName(), f.getType().getSimpleName(), m.getName());
                     }
                 }
             }
@@ -144,9 +150,9 @@ public class Monitors /*implements Iterable<Monitor>*/ {
             final Runnable r = () -> { m.update(); };
 
             if (async) {
-                m.runner = Bukkit.getScheduler().runTaskTimerAsynchronously(Spark.getInstance(), r, tickDelay, tickInterval);
+                m.runner = Bukkit.getScheduler().runTaskTimerAsynchronously(m.getOwningPlugin(), r, tickDelay, tickInterval);
             } else {
-                m.runner = Bukkit.getScheduler().runTaskTimer(Spark.getInstance(), r, tickDelay, tickInterval);
+                m.runner = Bukkit.getScheduler().runTaskTimer(m.getOwningPlugin(), r, tickDelay, tickInterval);
             }
 
             monitor = (M) m;
@@ -155,7 +161,7 @@ public class Monitors /*implements Iterable<Monitor>*/ {
                 Spark.register((Listener) monitor);
             }
         } catch (Throwable t) {
-            Log.severe("Unable to load Monitor[%s]. Error: %s", clazz.getSimpleName(), t.getMessage());
+            Log.getMain().severe("Unable to load Monitor[%s]. Error: %s", clazz.getSimpleName(), t.getMessage());
         }
         
         return monitor;
@@ -206,7 +212,7 @@ public class Monitors /*implements Iterable<Monitor>*/ {
                                 tickDelay = (Long) f.get(null);
                             }
                         } else {
-                            Log.debug("Found static field[%s] with type of [%s] for Monitor [%s]", f.getName(), f.getType().getSimpleName(), m.getName());
+                            Log.find(m.getOwningPlugin()).debug("Found static field[%s] with type of [%s] for Monitor [%s]", f.getName(), f.getType().getSimpleName(), m.getName());
                         }
                     }
                 }
@@ -214,9 +220,9 @@ public class Monitors /*implements Iterable<Monitor>*/ {
                 final Runnable r = () -> { m.update(); };
                 
                 if (async) {
-                    m.runner = Bukkit.getScheduler().runTaskTimerAsynchronously(Spark.getInstance(), r, tickDelay, tickInterval);
+                    m.runner = Bukkit.getScheduler().runTaskTimerAsynchronously(m.getOwningPlugin(), r, tickDelay, tickInterval);
                 } else {
-                    m.runner = Bukkit.getScheduler().runTaskTimer(Spark.getInstance(), r, tickDelay, tickInterval);
+                    m.runner = Bukkit.getScheduler().runTaskTimer(m.getOwningPlugin(), r, tickDelay, tickInterval);
                 }
                 
                 monitor = (M) m;
@@ -228,13 +234,14 @@ public class Monitors /*implements Iterable<Monitor>*/ {
                 //Store the Monitor
                 MONITORS.put(clazz, monitor);
             } catch (Throwable t) {
-                Log.severe("Unable to load Monitor[%s]. Error: %s", clazz.getSimpleName(), t.getMessage());
+                Log.getMain().severe("Unable to load Monitor[%s]. Error: %s", clazz.getSimpleName(), t.getMessage());
             }
         }
         
         return monitor;
     }
 
+    // ??? This might cause problems cause its being called for every SparkPlugin.
     public static void loadAll() {
         Set<Class<? extends Monitor>> classes = reflections.getSubTypesOf(Monitor.class);
                                       classes.forEach((monitor) -> { addMonitor(monitor); });

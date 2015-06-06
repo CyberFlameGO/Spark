@@ -10,11 +10,11 @@ import codes.goblom.spark.internals.ExecutorArgs;
 import codes.goblom.spark.internals.Spark;
 import codes.goblom.spark.misc.utils.Utils;
 import codes.goblom.spark.reflection.safe.SafeField;
-import java.util.Arrays;
 import java.util.Map;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.SimpleCommandMap;
+import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  *
@@ -56,7 +56,7 @@ final class SparkCommandWrapper extends Command {
             
         knownCommands.put("bukkit:" + getName(), this);
         knownCommands.put(getName(), this);
-        knownCommands.put(Spark.getInstance().getDescription().getName() + ":" + getName(), this);
+        knownCommands.put(JavaPlugin.getProvidingPlugin(command.getClass()).getDescription().getName() + ":" + getName(), this);
         
         SafeField f = new SafeField(getClass(), "commandMap");
                   f.setAccessible(true);

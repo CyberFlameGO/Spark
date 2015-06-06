@@ -22,7 +22,7 @@ import org.bukkit.map.MapView.Scale;
  * @author Goblom
  */
 @RequiredArgsConstructor
-public class ImageRenderer extends AbstractMapRenderer {
+public final class ImageRenderer extends AbstractMapRenderer {
 
     private final BufferedImage image;
     

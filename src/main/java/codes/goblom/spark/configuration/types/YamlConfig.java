@@ -29,7 +29,9 @@ public class YamlConfig implements Config {
         f = f.endsWith(".yml") ? f : f + ".yml";
         
         if (f.equals("config.yml")) {
-            plugin.saveDefaultConfig();
+            try {
+                plugin.saveDefaultConfig();
+            } catch (Exception e) { }
         }
         
         this.file = new File(external == null ? plugin.getDataFolder() : external, f);
@@ -37,9 +39,7 @@ public class YamlConfig implements Config {
         if (!this.file.exists()) {
             try {
                 plugin.saveResource(f, false); //TODO: Support inner-most files. not just top level
-            } catch (Exception e) { 
-                e.printStackTrace(); 
-            }
+            } catch (Exception e) { }
         }
         
         if (!this.file.exists()) {

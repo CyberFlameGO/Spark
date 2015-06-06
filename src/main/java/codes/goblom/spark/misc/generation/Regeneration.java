@@ -5,7 +5,7 @@
  */
 package codes.goblom.spark.misc.generation;
 
-import codes.goblom.spark.internals.Spark;
+import codes.goblom.spark.SparkPlugin;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import java.util.List;
@@ -36,11 +36,15 @@ import org.bukkit.scheduler.BukkitRunnable;
  */
 public class Regeneration {
 
-    private static Regeneration instance = null;
+    private static Map<String, Regeneration> INSTANCES = Maps.newHashMap();
     
-    private static Regeneration getInstance() {
-        if (instance == null) {
-            instance = new Regeneration(Spark.getInstance());
+    private static Regeneration getInstance(SparkPlugin plugin) {
+        Regeneration instance;
+        if (INSTANCES.containsKey(plugin.getName())) {
+            instance = INSTANCES.get(plugin.getName());
+        } else {
+            instance = new Regeneration(plugin);
+            INSTANCES.put(plugin.getName(), instance);
         }
         
         return instance;
@@ -54,7 +58,7 @@ public class Regeneration {
      * @see Regeneration
      * @param plugin 
      */
-    protected Regeneration(final Plugin plugin) {
+    protected Regeneration(final SparkPlugin plugin) {
         this.plugin = plugin;
         
         Bukkit.getPluginManager().registerEvents(new Listener() {

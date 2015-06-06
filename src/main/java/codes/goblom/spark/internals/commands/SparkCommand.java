@@ -14,6 +14,7 @@ import codes.goblom.spark.misc.utils.Utils;
 import java.util.Collections;
 import java.util.Map;
 import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  *
@@ -53,7 +54,7 @@ public interface SparkCommand extends Executor<Boolean, Throwable> {
             
             if (Utils.isValid(alias) && getCommand(alias) == null) {
                 REGISTERED_COMMANDS.put(alias, command);
-                Log.debug("Registered SparkCommand [%s]", alias);
+                Log.find(JavaPlugin.getProvidingPlugin(command.getClass())).debug("Registered SparkCommand [%s]", alias);
                 
                 registered = true;
             }

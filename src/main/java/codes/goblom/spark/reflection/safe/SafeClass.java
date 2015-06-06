@@ -35,7 +35,7 @@ public class SafeClass implements Safe<Class<?>> {
         } catch (Exception e) { }
         
         if (unsafe == null) {
-            Log.severe("Unable to find class [%s]", clazz);
+            Log.getMain().severe("Unable to find class [%s]", clazz);
         }
     }
     

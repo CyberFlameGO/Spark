@@ -6,8 +6,8 @@
 package codes.goblom.spark.misc.tools;
 
 import codes.goblom.spark.Log;
+import codes.goblom.spark.SparkPlugin;
 import codes.goblom.spark.internals.Callback;
-import codes.goblom.spark.internals.Spark;
 import codes.goblom.spark.internals.task.ThreadTask;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -37,14 +37,14 @@ public abstract class SpigotUpdater implements Callback<String> {
     
     private HttpURLConnection connection;
     
-    public SpigotUpdater(int resourceId) {
+    public SpigotUpdater(SparkPlugin plugin, int resourceId) {
         this.resourceId = resourceId;
-        this.currentVersion = Spark.getInstance().getDescription().getVersion();
+        this.currentVersion = plugin.getDescription().getVersion();
         this.postData = String.format(DATA, API_KEY, resourceId);
         
         ThreadTask urlTask = new ThreadTask<HttpURLConnection>((HttpURLConnection object, Throwable error) -> {
             if (error != null) {
-                Log.severe("Unable to contact spigot in order to run update check", error.getMessage());
+                Log.find(plugin).severe("Unable to contact spigot in order to run update check", error.getMessage());
                 
                 return;
             }
@@ -82,8 +82,8 @@ public abstract class SpigotUpdater implements Callback<String> {
     @Override
     public abstract void onFinish(String webVersion, Throwable error);
     
-    public static SpigotUpdater check(int id, Callback<String> callback) {
-        return new SpigotUpdater(id) {
+    public static SpigotUpdater check(SparkPlugin plugin, int id, Callback<String> callback) {
+        return new SpigotUpdater(plugin, id) {
 
             @Override
             public void onFinish(String version, Throwable error) {

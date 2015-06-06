@@ -49,7 +49,7 @@ public abstract class TextRenderer extends AbstractMapRenderer {
     }
     
     @Override
-    public void render(MapView map, MapCanvas canvas, Player player) {
+    public final void render(MapView map, MapCanvas canvas, Player player) {
         RenderData data = new RenderData();
         
         onRender(map, player, data);

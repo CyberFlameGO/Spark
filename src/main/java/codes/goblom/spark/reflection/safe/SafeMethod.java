@@ -39,7 +39,7 @@ public class SafeMethod<T> implements Safe<Method> {
                 types = Arrays.asList(params).toString();
             }
             
-            Log.severe("Class [%s] does does not have a superclass that has method [%s] with types %s", coreClass.getSimpleName(), methodName, types);
+            Log.getMain().severe("Class [%s] does does not have a superclass that has method [%s] with types %s", coreClass.getSimpleName(), methodName, types);
         }
         
         this.unsafe = method;

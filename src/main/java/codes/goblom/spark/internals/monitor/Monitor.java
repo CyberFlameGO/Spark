@@ -10,6 +10,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
 /**
@@ -29,12 +30,16 @@ public abstract class Monitor {
                 HandlerList.unregisterAll((Listener) this);
             }
         } else {
-            Log.warning("Attempted to stop a non-started Monitor[%s]", getClass().getSimpleName());
+            Log.find(getOwningPlugin()).warning("Attempted to stop a non-started Monitor[%s]", getClass().getSimpleName());
         }
     }
     
     public final String getName() {
         return getClass().getSimpleName();
+    }
+    
+    public final JavaPlugin getOwningPlugin() {
+        return JavaPlugin.getProvidingPlugin(getClass());
     }
     
     public abstract void update();

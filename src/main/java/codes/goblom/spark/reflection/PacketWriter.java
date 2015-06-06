@@ -5,7 +5,6 @@
  */
 package codes.goblom.spark.reflection;
 
-import codes.goblom.spark.SparkPlugin;
 import codes.goblom.spark.Log;
 import codes.goblom.spark.reflection.exceptions.InvalidPacketException;
 import codes.goblom.spark.reflection.exceptions.PacketNotFoundException;
@@ -72,12 +71,12 @@ public class PacketWriter {
         Field f = getField(packetClass, field);
 
         if (f == null) {
-            Log.warning("Field %s was not found for %s", field, packetClass.getSimpleName());
+            Log.getMain().warning("Field %s was not found for %s", field, packetClass.getSimpleName());
             return this;
         }
 
         if (!f.getType().equals(value.getClass())) {
-            Log.warning("Field %s uses a different object value", field);
+            Log.getMain().warning("Field %s uses a different object value", field);
             return this;
         }
         

@@ -7,41 +7,72 @@ package codes.goblom.spark;
 
 import codes.goblom.spark.internals.Spark;
 import codes.goblom.spark.internals.tools.Placeholders;
+import com.google.common.collect.Maps;
+import java.util.Map;
+import lombok.AccessLevel;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.Plugin;
 
 /**
  *
  * @author Goblom
  */
-public class Log {
+@RequiredArgsConstructor( access = AccessLevel.PRIVATE )
+public final class Log {
     
-    private Log() { }
+    private static final Map<String, Log> FIND = Maps.newConcurrentMap();
     
-    public static void info(String message, Object... vals) {
+    public static Log getMain() {
+        Log log = FIND.get(Spark.getMainInstance().getName());
+        
+        if (log == null) {
+            log = new Log(Spark.getMainInstance());
+            FIND.put(Spark.getMainInstance().getName(), log);
+        }
+        
+        return log;
+    }
+    
+    public static Log find(@NonNull Plugin plugin) {
+        Log log = FIND.get(plugin.getName());
+        
+        if (log == null) {
+            log = new Log(plugin);
+            FIND.put(plugin.getName(), log);
+        }
+        
+        return log;
+    }
+    
+    private final Plugin plugin;
+    
+    public void info(String message, Object... vals) {        
         if (vals != null && vals.length != 0) {
-            Spark.getInstance().getLogger().info(String.format(message, vals));
+            plugin.getLogger().info(String.format(message, vals));
         } else {
-            Spark.getInstance().getLogger().info(message);
+            plugin.getLogger().info(message);
         }
     }
     
-    public static void warning(String message, Object... vals) {
+    public void warning(String message, Object... vals) {
         if (vals != null && vals.length != 0) {
-            Spark.getInstance().getLogger().warning(String.format(message, vals));
+            plugin.getLogger().warning(String.format(message, vals));
         } else {
-            Spark.getInstance().getLogger().warning(message);
+            plugin.getLogger().warning(message);
         }
     }
     
-    public static void severe(String message, Object... vals) {
+    public void severe(String message, Object... vals) {
         if (vals != null && vals.length != 0) {
-            Spark.getInstance().getLogger().severe(String.format(message, vals));
+            plugin.getLogger().severe(String.format(message, vals));
         } else {
-            Spark.getInstance().getLogger().severe(message);
+            plugin.getLogger().severe(message);
         }
     }
     
-    public static void debug(String message, Object... vals) {
+    public void debug(String message, Object... vals) {
         if (Spark.isDebug()) {
             info("[Debug] " + message, vals);
         }

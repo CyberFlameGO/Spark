@@ -6,6 +6,7 @@
 package codes.goblom.spark.configuration.types;
 
 import codes.goblom.spark.Log;
+import codes.goblom.spark.SparkPlugin;
 import codes.goblom.spark.configuration.Config;
 import codes.goblom.spark.configuration.ConfigType;
 import java.io.BufferedReader;
@@ -18,7 +19,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import lombok.Getter;
-import org.bukkit.plugin.Plugin;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,6 +29,8 @@ import org.json.JSONObject;
  */
 public class JsonConfig implements Config {
 
+    private final SparkPlugin plugin;
+    
     @Getter
     private final File file;
     
@@ -40,11 +42,11 @@ public class JsonConfig implements Config {
     @Getter
     private JsonConfig parent = null;
     
-    public JsonConfig(Plugin plugin, String file) {
+    public JsonConfig(SparkPlugin plugin, String file) {
         this(plugin, null, file);
     }
     
-    public JsonConfig(Plugin plugin, File external, String f) {
+    public JsonConfig(SparkPlugin plugin, File external, String f) {
         f = f.endsWith(".json") ? f : f + ".json";
         
         this.file = new File(external == null ? plugin.getDataFolder() : external, f);
@@ -52,9 +54,7 @@ public class JsonConfig implements Config {
         if (!this.file.exists()) {
             try {
                 plugin.saveResource(f, false);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            } catch (Exception e) { }
         }
         
         if (!this.file.exists()) {
@@ -74,10 +74,11 @@ public class JsonConfig implements Config {
                 this.json = new JSONObject(text);
             }
         } catch (IOException | JSONException e) {
-            Log.severe("Unable to load JsonConfig %s. Error: %s", f, e.getMessage());
+            Log.find(plugin).severe("Unable to load JsonConfig %s. Error: %s", f, e.getMessage());
         }
         
-        Log.warning("You are using an experimental version of JsonConfig. Some features might not work.");
+        Log.find(plugin).warning("You are using an experimental version of JsonConfig. Some features might not work.");
+        this.plugin = plugin;
     }
     
     private JsonConfig(JsonConfig parent, String tag, JSONObject object) {
@@ -86,6 +87,7 @@ public class JsonConfig implements Config {
         this.tag = tag;
         
         this.file = parent.file;
+        this.plugin = parent.plugin;
     }
     
     private String readFile(File file) throws IOException {
@@ -200,7 +202,7 @@ public class JsonConfig implements Config {
 //                           writer.close();
 //                }
         } catch (IOException ex) {
-            Log.severe("Unable to save JsonConfig %s. Error: %s", file.getName(), ex.getMessage());
+            Log.find(plugin).severe("Unable to save JsonConfig %s. Error: %s", file.getName(), ex.getMessage());
         } finally {
             if (pw != null) {
                 pw.close();
@@ -220,7 +222,7 @@ public class JsonConfig implements Config {
                 this.json = new JSONObject(text);
             }
         } catch (IOException | JSONException e) {
-            Log.severe("Unable to load JsonConfig %s. Error: %s", file.getName(), e.getMessage());
+            Log.find(plugin).severe("Unable to load JsonConfig %s. Error: %s", file.getName(), e.getMessage());
         }
     }
     

@@ -14,7 +14,6 @@ import codes.goblom.spark.misc.utils.Utils;
 import codes.goblom.spark.reflection.safe.SafeField;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import org.bukkit.command.Command;
@@ -30,7 +29,6 @@ public final class DefaultSparkCommand extends Command {
     protected final static Map<String, SparkCommand> REGISTERED_COMMANDS = Maps.newConcurrentMap();
     
     protected static boolean registerAsMain(SparkCommand command) {
-        System.out.println(String.format("Attempting to register %s as main", command.getAliases()[0]));
         if (!command.isMainCommand() || !Utils.isValid(command.getAliases())) {
             return false;
         }

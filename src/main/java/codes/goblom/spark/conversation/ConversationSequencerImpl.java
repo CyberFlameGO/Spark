@@ -3,7 +3,6 @@ package codes.goblom.spark.conversation;
 import codes.goblom.spark.Log;
 import lombok.Getter;
 import codes.goblom.spark.conversation.ConversationStep.StepResult;
-import codes.goblom.spark.internals.Spark;
 import codes.goblom.spark.internals.tools.Placeholders;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -16,6 +15,7 @@ import org.bukkit.conversations.ConversationFactory;
 import org.bukkit.conversations.ConversationPrefix;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.ValidatingPrompt;
+import org.bukkit.plugin.Plugin;
 
 /**
  *
@@ -41,8 +41,8 @@ class ConversationSequencerImpl extends ValidatingPrompt implements Conversation
     
     private ConversationSequencerImpl() { }
     
-    ConversationSequencerImpl(Conversable player, boolean allowConsole, ConversationStep[] steps) {
-        ConversationFactory factory = new ConversationFactory(Spark.getInstance());
+    ConversationSequencerImpl(Plugin plugin, Conversable player, boolean allowConsole, ConversationStep[] steps) {
+        ConversationFactory factory = new ConversationFactory(plugin);
                             factory.withLocalEcho(false);
                             factory.withPrefix(prefix);
                             factory.withModality(true);
@@ -61,7 +61,7 @@ class ConversationSequencerImpl extends ValidatingPrompt implements Conversation
             step.setHandle(this);
         }
         
-        Log.debug("[ConversationSequencer] Registered %s Steps for %s.", steps.length, player instanceof CommandSender ? ((CommandSender) player).getName() : player.toString());
+        Log.find(plugin).debug("[ConversationSequencer] Registered %s Steps for %s.", steps.length, player instanceof CommandSender ? ((CommandSender) player).getName() : player.toString());
     }
     
     @Override

@@ -23,6 +23,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.conversations.Conversable;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  *
@@ -113,7 +114,7 @@ public class Placeholders {
     
     public static boolean register(Placeholder placeholder) {
         if (!Utils.isValid(placeholder)) {
-            Log.warning("A Placeholders key cannot be null or empty");
+            Log.find(JavaPlugin.getProvidingPlugin(placeholder.getClass())).warning("A Placeholders key cannot be null or empty");
             return false;
         }
         
