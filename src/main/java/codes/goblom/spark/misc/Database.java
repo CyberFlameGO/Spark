@@ -420,7 +420,7 @@ public class Database {
         return b;
     }
     
-    public SimpleResultSetIterator createSimpleIterator(ResultSet rs) {
+    public static SimpleResultSetIterator createSimpleIterator(ResultSet rs) {
         return new SimpleResultSetIterator(rs);
     }
     
