@@ -59,6 +59,18 @@ public class SparkShapedRecipe {
         return this;
     }
     
+    public SparkShapedRecipe top(Slot slot, char c) {
+        return top(slot.slot, c);
+    }
+    
+    public SparkShapedRecipe middle(Slot slot, char c) {
+        return middle(slot.slot, c);
+    }
+    
+    public SparkShapedRecipe bottom(Slot slot, char c) {
+        return bottom(slot.slot, c);
+    }
+    
     public SparkShapedRecipe ingredient(char c, Material mat) {
         Validate.isTrue(!box.anyContains(c), "Can only set ingredient with char that exists in shape.");
         ingredients.put(c, new ItemStack(mat));
@@ -163,5 +175,12 @@ public class SparkShapedRecipe {
         public String[] getShape() {
             return new String[] { getString(top), getString(middle), getString(bottom) };
         }
+    }
+    
+    @RequiredArgsConstructor
+    public static enum Slot {
+        LEFT(1), MIDDLE(2), RIGHT(3);
+        
+        private final int slot;
     }
 }
