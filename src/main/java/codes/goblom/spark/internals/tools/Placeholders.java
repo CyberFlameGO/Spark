@@ -149,6 +149,8 @@ public class Placeholders {
                 continue;
             }
             
+            ExecutorArgs args = ExecutorArgs.wrap(player);
+            
             if (p.isRegex()) {
                 Pattern pattern;
                 
@@ -161,17 +163,19 @@ public class Placeholders {
                 Matcher matcher = pattern.matcher(msg);
                 
                 try {
-                    if (matcher.matches()) {
-                        msg = matcher.replaceAll(p.execute(ExecutorArgs.wrap(player)).toString());
+                    while (matcher.matches()) {
+                        msg = matcher.replaceAll(p.execute(args).toString());
                     }
                 } catch (Throwable t) {
                     t.printStackTrace();
                 }
             } else {
-                try {
-                    msg = msg.replace(p.getKey(), p.execute(ExecutorArgs.wrap(player)).toString());
-                } catch (Throwable e) {
-                    e.printStackTrace();
+                while (msg.contains(p.getKey())) {
+                    try {
+                        msg = msg.replace(p.getKey(), p.execute(args).toString());
+                    } catch (Throwable e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
