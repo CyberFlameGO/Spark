@@ -7,6 +7,7 @@ package codes.goblom.spark;
 
 import codes.goblom.spark.configuration.Config;
 import codes.goblom.spark.configuration.ConfigType;
+import codes.goblom.spark.configuration.jafig.*;
 import codes.goblom.spark.conversation.ConversationApi;
 import codes.goblom.spark.conversation.ConversationSequencer;
 import codes.goblom.spark.internals.task.AsyncTask;
@@ -23,6 +24,7 @@ import java.io.File;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import net.burngames.jafig.Jafig;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.conversations.Conversable;
@@ -72,7 +74,14 @@ public abstract class SparkPlugin extends JavaPlugin implements Spark {
         }
         
         // Finished core config loading
-        
+
+        // Add the Bukkit Jafig serializers
+        Jafig.addSerializer(new LocationSerializer());
+        Jafig.addSerializer(new PlayerSerializer());
+        Jafig.addSerializer(new StringSerializer());
+        Jafig.addSerializer(new UUIDSerializer());
+        Jafig.addSerializer(new WorldSerializer());
+
         if (core.get("enable-metrics", true)) {
             new AsyncTask<Metrics>((Metrics object, Throwable error) -> {
                 if (error == null) {
