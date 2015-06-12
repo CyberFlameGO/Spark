@@ -138,7 +138,7 @@ public class SparkShapedRecipe {
         }
         
         private void validate(int i) {
-            Validate.isTrue(i >= 1 && i <= 3, "Slot cannot be less than 1 or greater than 3 not");
+            Validate.isTrue(i >= 1 && i <= 3, "Slot cannot be less than 1 or greater than 3 not", i);
         }
         
         void setTop(int slot, char string) {

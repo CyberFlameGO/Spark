@@ -5,7 +5,6 @@
  */
 package codes.goblom.spark.misc.utils;
 
-import codes.goblom.spark.Log;
 import codes.goblom.spark.reflection.Reflection;
 import codes.goblom.spark.reflection.safe.SafeClass;
 import codes.goblom.spark.reflection.safe.SafeMethod;
@@ -16,6 +15,9 @@ import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
 import java.util.List;
 import java.util.UUID;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.apache.commons.codec.binary.Base64;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -43,7 +45,6 @@ public class ItemUtils {
     
     private ItemUtils() { }
     
-    private static final ItemUtils itemUtils = new ItemUtils();
     private static final Base64 BASE64 = new Base64();
     
     public static void lowerHandItem(Player player, int amount) {
@@ -129,19 +130,19 @@ public class ItemUtils {
     }
     
     public static Builder build(Material mat) {
-        return itemUtils.new Builder(mat);
+        return new Builder(mat);
     }
     
     public static Builder build(ItemStack stack) { 
-        return itemUtils.new Builder(stack);
+        return new Builder(stack);
     }
     
     public static Builder build(Material mat, int amount) {
-        return itemUtils.new Builder(mat, amount);
+        return new Builder(mat, amount);
     }
     
     public static Builder build(Material mat, int amount, short damage) {
-        return itemUtils.new Builder(mat, amount, damage);
+        return new Builder(mat, amount, damage);
     }
     
     // **************************************
@@ -151,23 +152,21 @@ public class ItemUtils {
     // TODO: BookMeta
     // TODO: BannerMeta
     // TODO: MapMeta
-    public class Builder {
-        private final ItemStack stack;
-        
-        protected Builder(ItemStack stack) {
-            this.stack = stack;
-        }
+    @AllArgsConstructor( access = AccessLevel.PROTECTED )
+    public static class Builder {
+        @Getter
+        private ItemStack stack;
         
         protected Builder(Material mat) {
-            this.stack = new ItemStack(mat);
+            this(new ItemStack(mat));
         }
         
         protected Builder(Material mat, int amount) {
-            this.stack = new ItemStack(mat, amount);
+            this(new ItemStack(mat, amount));
         }
         
         protected Builder(Material mat, int amount, short damage) {
-            this.stack = new ItemStack(mat, amount, damage);
+            this(new ItemStack(mat, amount, damage));
         }
         
         public ItemStack build() {
@@ -255,6 +254,8 @@ public class ItemUtils {
             
             if (!replace) {
                 lore.addAll(lines);
+            } else {
+                lore = lines;
             }
             
             meta.setLore(lore);
@@ -326,6 +327,16 @@ public class ItemUtils {
         
         public Builder reset() {
             stack.setItemMeta(Bukkit.getItemFactory().getItemMeta(stack.getType()));
+            
+            return this;
+        }
+        
+        /**
+         * @deprecated untested
+         */
+        @Deprecated
+        public Builder removeAttributes() {
+            stack = ItemUtils.removeAttributes(stack);
             
             return this;
         }

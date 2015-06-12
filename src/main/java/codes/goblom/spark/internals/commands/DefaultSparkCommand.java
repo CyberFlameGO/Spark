@@ -73,7 +73,7 @@ public final class DefaultSparkCommand extends Command {
         
         if (args.length >= 1 && (cmd = SparkCommand.getCommand(args[0])) != null) {
             if (!cmd.canExecute(sender)) {
-                Log.sendErrorMessage(sender, "Command not found");
+                sender.sendMessage("Unknown command. Type \"/help\" for help.");
                     
                 return true;
             }
