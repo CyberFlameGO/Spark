@@ -7,7 +7,7 @@ package codes.goblom.spark;
 
 import codes.goblom.spark.configuration.Config;
 import codes.goblom.spark.configuration.ConfigType;
-import codes.goblom.spark.configuration.jafig.*;
+import codes.goblom.spark.configuration.jafig.types.*;
 import codes.goblom.spark.conversation.ConversationApi;
 import codes.goblom.spark.conversation.ConversationSequencer;
 import codes.goblom.spark.internals.Callback;

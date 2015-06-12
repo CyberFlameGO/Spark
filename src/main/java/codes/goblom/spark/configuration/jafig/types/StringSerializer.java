@@ -1,4 +1,4 @@
-package codes.goblom.spark.configuration.jafig;
+package codes.goblom.spark.configuration.jafig.types;
 
 import net.burngames.jafig.serialize.JafigSerializer;
 import net.burngames.jafig.serialize.types.SerializedPrimitive;
