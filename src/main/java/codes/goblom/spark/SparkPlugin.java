@@ -10,10 +10,10 @@ import codes.goblom.spark.configuration.ConfigType;
 import codes.goblom.spark.configuration.jafig.*;
 import codes.goblom.spark.conversation.ConversationApi;
 import codes.goblom.spark.conversation.ConversationSequencer;
-import codes.goblom.spark.internals.task.AsyncTask;
 import codes.goblom.spark.internals.Callback;
 import codes.goblom.spark.internals.Spark;
 import codes.goblom.spark.internals.monitor.Monitors;
+import codes.goblom.spark.internals.task.AsyncTask;
 import codes.goblom.spark.internals.task.SyncTask;
 import codes.goblom.spark.misc.tools.BukkitDevUpdater;
 import codes.goblom.spark.misc.tools.Metrics;
@@ -33,6 +33,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.File;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  *
@@ -76,7 +81,9 @@ public abstract class SparkPlugin extends JavaPlugin implements Spark {
         // Finished core config loading
 
         // Add the Bukkit Jafig serializers
+        Jafig.addSerializer(new ItemStackSerializer());
         Jafig.addSerializer(new LocationSerializer());
+        Jafig.addSerializer(new MaterialSerializer());
         Jafig.addSerializer(new PlayerSerializer());
         Jafig.addSerializer(new StringSerializer());
         Jafig.addSerializer(new UUIDSerializer());

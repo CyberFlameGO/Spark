@@ -6,6 +6,7 @@ import net.burngames.jafig.serialize.types.SerializedValue;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 
 import java.lang.reflect.Field;
 import java.util.UUID;
@@ -16,7 +17,7 @@ import java.util.UUID;
 public class PlayerSerializer extends JafigSerializer<OfflinePlayer> {
 
     public PlayerSerializer() {
-        super(OfflinePlayer.class);
+        super(OfflinePlayer.class, Player.class);
     }
 
     @Override
