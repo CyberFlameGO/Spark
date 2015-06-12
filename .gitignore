@@ -1,1 +1,11 @@
+<<<<<<< HEAD
 /src/main/resources/config.yml
+=======
+# Testing materials
+/src/main/resources/plugin.yml
+/src/main/resources/config.yml
+
+# IntelliJ
+*.iml
+.idea
+>>>>>>> Start adding Bukkit serializers to Jafig
