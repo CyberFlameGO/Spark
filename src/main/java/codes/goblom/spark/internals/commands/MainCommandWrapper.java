@@ -20,11 +20,11 @@ import org.bukkit.plugin.java.JavaPlugin;
  *
  * @author Goblom
  */
-final class SparkCommandWrapper extends Command {
+final class MainCommandWrapper extends Command {
 
     private final SparkCommand command;
     
-    SparkCommandWrapper(String name, SparkCommand command) {
+    MainCommandWrapper(String name, SparkCommand command) {
         super(name);
         this.command = command;
         

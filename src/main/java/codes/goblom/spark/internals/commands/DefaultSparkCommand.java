@@ -34,8 +34,8 @@ public final class DefaultSparkCommand extends Command {
         }
         
         for (String alias : command.getAliases()) {
-            SparkCommandWrapper wrapper = new SparkCommandWrapper(alias, command);
-                                wrapper.register();
+            MainCommandWrapper wrapper = new MainCommandWrapper(alias, command);
+                               wrapper.register();
                  
 //            REGISTERED_COMMANDS.put(alias, command);
         }
@@ -110,7 +110,7 @@ public final class DefaultSparkCommand extends Command {
         return true;
     }
     
-    public boolean execute(SparkCommand cmd, CommandSender sender, String[] args) {
+   protected static boolean execute(SparkCommand cmd, CommandSender sender, String[] args) {
         if (cmd.runAsync()) {
             new AsyncTask<Boolean>(new Callback<Boolean>() {
 
@@ -145,7 +145,7 @@ public final class DefaultSparkCommand extends Command {
         return false;
     }
     
-    String[] prepare(int startAt, String[] args) {
+    protected static String[] prepare(int startAt, String[] args) {
         if (args.length == 1) {
             return new String[0];
         }
