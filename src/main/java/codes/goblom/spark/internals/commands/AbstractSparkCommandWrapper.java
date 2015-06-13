@@ -5,18 +5,15 @@
  */
 package codes.goblom.spark.internals.commands;
 
-import codes.goblom.spark.Log;
 import codes.goblom.spark.SparkPlugin;
-import codes.goblom.spark.internals.Callback;
-import codes.goblom.spark.internals.ExecutorArgs;
 import codes.goblom.spark.internals.Spark;
-import codes.goblom.spark.internals.task.AsyncTask;
 import codes.goblom.spark.misc.utils.PlayerUtils;
 import codes.goblom.spark.misc.utils.Utils;
 import codes.goblom.spark.reflection.safe.SafeField;
 import com.google.common.collect.Lists;
-import java.util.List;
+import com.google.common.collect.Maps;
 import java.util.Map;
+import lombok.Getter;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.SimpleCommandMap;
@@ -28,7 +25,10 @@ import org.bukkit.command.SimpleCommandMap;
 public abstract class AbstractSparkCommandWrapper<T extends SparkPlugin> extends Command {
 
     protected final T plugin;
-
+    
+    @Getter
+    private final Map<String, SparkCommand> availableCommands = Maps.newConcurrentMap();
+    
     public AbstractSparkCommandWrapper(T plugin, String command) {
         super(command);
         this.plugin = plugin;
@@ -39,7 +39,19 @@ public abstract class AbstractSparkCommandWrapper<T extends SparkPlugin> extends
         this.plugin = plugin;
     }
 
-    public AbstractSparkCommandWrapper register() {
+    public AbstractSparkCommandWrapper registerCommand(SparkCommand cmd) {
+        if (Utils.isValid(cmd.getAliases())) {
+            for (String alias : cmd.getAliases()) {
+                if (!availableCommands.containsKey(alias)) {
+                    availableCommands.put(alias, cmd);
+                }
+            }
+        }
+        
+        return this;
+    }
+    
+    public final AbstractSparkCommandWrapper registerWithBukkit() {
         SimpleCommandMap commandMap = Spark.getCommandMap();
         SafeField<Map<String, Command>> field = new SafeField(commandMap.getClass(), "knownCommands");
         field.setAccessible(true);
@@ -56,8 +68,6 @@ public abstract class AbstractSparkCommandWrapper<T extends SparkPlugin> extends
 
         return this;
     }
-
-    public abstract Map<String, SparkCommand> getAvailableCommands();
 
     public void sendHelpMessages(CommandSender sender) { }
 
