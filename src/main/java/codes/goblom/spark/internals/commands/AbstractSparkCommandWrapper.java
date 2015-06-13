@@ -22,24 +22,20 @@ import org.bukkit.command.SimpleCommandMap;
  *
  * @author Goblom
  */
-public abstract class AbstractSparkCommandWrapper<T extends SparkPlugin> extends Command {
-
-    protected final T plugin;
+public abstract class AbstractSparkCommandWrapper extends Command {
     
     @Getter
     private final Map<String, SparkCommand> availableCommands = Maps.newConcurrentMap();
     
-    public AbstractSparkCommandWrapper(T plugin, String command) {
+    public AbstractSparkCommandWrapper(String command) {
         super(command);
-        this.plugin = plugin;
     }
 
-    public AbstractSparkCommandWrapper(T plugin, String name, String description, String usageMessage) {
+    public AbstractSparkCommandWrapper(String name, String description, String usageMessage) {
         super(name, description, usageMessage, Lists.newArrayList()); // TODO: Support Aliases
-        this.plugin = plugin;
     }
 
-    public AbstractSparkCommandWrapper registerCommand(SparkCommand cmd) {
+    public final AbstractSparkCommandWrapper registerCommand(SparkCommand cmd) {
         if (Utils.isValid(cmd.getAliases())) {
             for (String alias : cmd.getAliases()) {
                 if (!availableCommands.containsKey(alias)) {
@@ -51,27 +47,27 @@ public abstract class AbstractSparkCommandWrapper<T extends SparkPlugin> extends
         return this;
     }
     
-    public final AbstractSparkCommandWrapper registerWithBukkit() {
+    public final AbstractSparkCommandWrapper registerWithBukkit(SparkPlugin plugin) {
         SimpleCommandMap commandMap = Spark.getCommandMap();
         SafeField<Map<String, Command>> field = new SafeField(commandMap.getClass(), "knownCommands");
-        field.setAccessible(true);
-        field.setReadOnly(false);
+                                        field.setAccessible(true);
+                                        field.setReadOnly(false);
+        
         Map<String, Command> knownCommands = field.get(commandMap);
-
-        knownCommands.put(getName(), this);
-        knownCommands.put(plugin.getDescription().getName() + ":" + getName(), this);
+                             knownCommands.put(getName(), this);
+                             knownCommands.put(plugin.getDescription().getName() + ":" + getName(), this);
 
         SafeField f = new SafeField(getClass(), "commandMap");
-        f.setAccessible(true);
-        f.set(this, commandMap);
+                  f.setAccessible(true);
+                  f.set(this, commandMap);
 
         return this;
     }
 
     public void sendHelpMessages(CommandSender sender) { }
 
-    public String cannotExecuteMessage() {
-        return "&cInvalid Permissions.";
+    public String[] cannotExecuteMessage(SparkCommand cmd) {
+        return new String[] { "&cInvalid Permissions." };
     }
 
     @Override
@@ -80,10 +76,12 @@ public abstract class AbstractSparkCommandWrapper<T extends SparkPlugin> extends
 
         if (args.length >= 1 && ((cmd = getAvailableCommands().get(args[0])) != null)) {
             if (!cmd.canExecute(sender)) {
-                String msg = cannotExecuteMessage();
+                String[] msg = cannotExecuteMessage(cmd);
 
                 if (Utils.isValid(msg)) {
-                    PlayerUtils.sendMessage(sender, msg);
+                    for (String str : msg) {
+                        PlayerUtils.sendMessage(sender, str);
+                    }
                 }
 
                 return true;
