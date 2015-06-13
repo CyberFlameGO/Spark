@@ -58,7 +58,6 @@ public abstract class AbstractSparkCommandWrapper<T extends SparkPlugin> extends
         field.setReadOnly(false);
         Map<String, Command> knownCommands = field.get(commandMap);
 
-        knownCommands.put("bukkit:" + getName(), this);
         knownCommands.put(getName(), this);
         knownCommands.put(plugin.getDescription().getName() + ":" + getName(), this);
 
