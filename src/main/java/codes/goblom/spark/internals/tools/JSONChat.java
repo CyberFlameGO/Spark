@@ -23,15 +23,15 @@ import org.json.simple.JSONObject;
  */
 public final class JSONChat {
 
-    public static void main(String[] args) {
-        JSONChat main = JSONChat.withText("Hello, ")
-                 .withColor(JSONColor.YELLOW)
-                 .withExtra(JSONChat.withText("Goblom").withColor(JSONColor.LIGHT_PURPLE, JSONColor.ITALIC, JSONColor.UNDERLINE))
-                 .withExtra(JSONChat.withText("!").withColor(JSONColor.YELLOW, JSONColor.ITALIC));
-        
-        System.out.println(main);
-        
-    }
+//    public static void main(String[] args) {
+//        JSONChat main = JSONChat.withText("Hello, ")
+//                 .withColor(JSONColor.YELLOW)
+//                 .withExtra(JSONChat.withText("Goblom").withColor(JSONColor.LIGHT_PURPLE, JSONColor.ITALIC, JSONColor.UNDERLINE))
+//                 .withExtra(JSONChat.withText("!").withColor(JSONColor.YELLOW, JSONColor.ITALIC));
+//        
+//        System.out.println(main);
+//        
+//    }
     
     static {
         Utils.addValidaterCheck((Validater<JsonEntry>) (JsonEntry obj) -> {
