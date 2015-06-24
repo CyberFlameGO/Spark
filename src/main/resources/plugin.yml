@@ -1,5 +1,10 @@
 main: codes.goblom.spark.SparkInstance
 version: Alpha
-name: Spark
 author: Goblom
 load: startup
+
+## Fix log name to "[Spark]" instead of "[aSpark]"
+prefix: Spark
+
+## Attempt to load before all other plugins
+name: aSpark
