@@ -78,7 +78,7 @@ public class Database {
          * {port} -- The port of the MySQL server
          * {database} -- The Database name you are connecting to
          */
-        MySQL("com.mysql.jdbc.Drive", "jdbc:mysql://{host}:{port}/{database}?autoReconnect=true"),
+        MySQL("com.mysql.jdbc.Driver", "jdbc:mysql://{host}:{port}/{database}?autoReconnect=true"),
         
         /**
          * {file} -- The file of the SQLite database
@@ -377,8 +377,11 @@ public class Database {
     }
     
     public boolean tableContains(String table, String column, Object value) {
-        final String sql = "SELECT COUNT(%s) AS %s Count FROM %s WHERE %s='%s'";
-        final ResultSet rs = executeQuery(sql, column, column, table, column, value);
+//        final String sql = "SELECT COUNT(%s) AS %s Count FROM %s WHERE %s=%s";
+//        final ResultSet rs = executeQuery(sql, column, column, table, column, value);
+        
+        final String sql = "SELECT COUNT(*) FROM `%s` WHERE `%s` = '%s'";
+        final ResultSet rs = executeQuery(sql, table, column, value);
         
         try {
             if (rs == null || rs.isAfterLast()) {
