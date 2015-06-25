@@ -7,6 +7,7 @@ package codes.goblom.spark.internals.tools;
 
 import codes.goblom.spark.internals.Validater;
 import codes.goblom.spark.internals.tools.JSONChat.JsonEntry;
+import codes.goblom.spark.misc.utils.ItemUtils;
 import codes.goblom.spark.misc.utils.Utils;
 import com.google.common.collect.Maps;
 import java.net.URL;
@@ -14,10 +15,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 /**
+ * http://www.minecraftforum.net/forums/minecraft-discussion/redstone-discussion-and/351959
  * 
  * @author Goblom
  */
@@ -40,7 +44,7 @@ public final class JSONChat {
     }
     
     public static JSONChat withEmpty() {
-        return withText("");
+        return new JSONChat();
     }
     
     public static JSONChat withText(String str) {
@@ -50,8 +54,22 @@ public final class JSONChat {
     private final JSONObject json = new JSONObject();
     private final List<JSONChat> extra = new JSONArray();
     
+    private JSONChat() { }
+    
     private JSONChat(String text) { 
         json.put("text", text);
+    }
+    
+    public JSONChat withCustomData(JSONArray array) {
+        json.put("with", array);
+        
+        return this;
+    }
+    
+    public JSONChat withCustomEntry(String key, Object value) {
+        json.put(key, value);
+        
+        return this;
     }
     
     public JSONChat withEntry(JsonEntry entry) {
@@ -89,6 +107,35 @@ public final class JSONChat {
         json.put("extra", extra);
         
         return this;
+    }
+    
+    public JSONChat withTranslation(String itemCode) {
+        json.put("translate", itemCode);
+        
+        return this;
+    }
+    
+    /**
+     * @deprecated Untested method
+     */
+    @Deprecated
+    public JSONChat withTranslation(ItemStack stack) {
+        json.put("translate", ItemUtils.getItemCode(stack));
+        
+        return this;
+    }
+    
+    public JSONChat withInsertion(String str) {
+        json.put("insertion", str);
+        
+        return this;
+    }
+    
+    /**
+     * Editing this manually may make the json syntax for chat not work
+     */
+    public JSONObject getUnsafeObject() {
+        return json;
     }
     
     @Override
@@ -161,6 +208,14 @@ public final class JSONChat {
             super(action, value);
         }
         
+        public HoverEventEntry(HoverAction action, JSONObject obj) {
+            this(action, obj.toString());
+        }
+        
+        public HoverEventEntry(HoverAction action, JSONChat chat) {
+            this(action, chat.toString());
+        }
+        
         @Override
         public String key() {
             return "hoverEvent";
@@ -171,12 +226,41 @@ public final class JSONChat {
 
         public ClickEventEntry(ClickAction action, String value) {
             super(action, value);
+            
+            if (!action.isValid(value)) {
+                throw new UnsupportedOperationException(String.format("%s does does not support value of %s", action.name(), value));
+            }
         }
         
         @Override
         public String key() {
             return "clickEvent";
         }
+    }
+    
+    @RequiredArgsConstructor
+    public static class ScoreEntry implements JsonEntry {
+
+        private final String playerName;
+        private final String objective;
+        
+        public ScoreEntry(Player player, String objective) {
+            this(player.getName(), objective);
+        }
+        
+        @Override
+        public String key() {
+            return "score";
+        }
+
+        @Override
+        public Map<String, String> entries() {
+            String[] nameEntry = { "name", playerName };
+            String[] objectiveEntry = { "objective", objective };
+            
+            return toMapFrom(nameEntry, objectiveEntry);
+        }
+        
     }
     
     /// #### YOLO
