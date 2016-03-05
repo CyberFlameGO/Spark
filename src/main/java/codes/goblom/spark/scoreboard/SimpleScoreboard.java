@@ -24,10 +24,6 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
-/**
- *
- * @author Goblom
- */
 @RequiredArgsConstructor
 public class SimpleScoreboard {
     private static final char COLOR_CHAR = '§';
