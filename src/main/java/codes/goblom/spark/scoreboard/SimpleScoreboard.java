@@ -24,6 +24,11 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
+/*
+ * https://bukkit.org/threads/263041/
+
+ * @author RainoBoy97
+ */
 @RequiredArgsConstructor
 public class SimpleScoreboard {
     private static final char COLOR_CHAR = '§';
